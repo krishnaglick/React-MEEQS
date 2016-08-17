@@ -34,3 +34,14 @@
 {"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-03T15:49:20.283Z"}
 {"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-03T15:49:20.283Z"}
 {"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"192.168.99.1 @ 2016-08-03T20:42:03.874Z"}
+{"level":"notice","message":"*** starting actionhero ***","timestamp":"192.168.99.1 @ 2016-08-04T17:41:07.728Z"}
+{"level":"info","message":"Redis connection `client` connected","timestamp":"192.168.99.1 @ 2016-08-04T17:41:07.735Z"}
+{"level":"info","message":"Redis connection `subscriber` connected","timestamp":"192.168.99.1 @ 2016-08-04T17:41:07.736Z"}
+{"level":"info","message":"Redis connection `tasks` connected","timestamp":"192.168.99.1 @ 2016-08-04T17:41:07.737Z"}
+{"level":"notice","message":"pid: 6936","timestamp":"192.168.99.1 @ 2016-08-04T17:41:07.995Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-04T17:41:07.995Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8080","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.004Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.014Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.017Z"}
+{"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.613Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.614Z"}

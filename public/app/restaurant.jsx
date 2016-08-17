@@ -14,10 +14,13 @@ class Restaurant extends Component {
       environment : props.environment || 0,
       quality: props.quality || 0,
       service: props.service || 0,
-      name: props.name || ''
+      name: [props.name] || [''],
+      options: [],
+      isFetching: false
     };
 
-    this.locations = [];
+    this.options = [];
+    this.isFetching = false;
 
     this.searcher = new searcher();
     this.rate = this.rate.bind(this);
@@ -30,16 +33,24 @@ class Restaurant extends Component {
 
   async search(event) {
     try {
+      this.setState({ isFetching: true });
       const name = event.target.value;
       const data = await this.searcher
         .setLocation(this.props.loc.lat, this.props.loc.long)
         .loadLocations({name});
-      this.locations = data;
+      //debugger;
+      //this.props.locations = data;
+      const o = {options: _.map(data, (v) => {
+        return { text: v.name, value: v.id };
+      })};
+      debugger;
+      this.setState(o);
       //console.log(data);
     }
     catch(x) {
       console.log('Error finding google data!', x);
     }
+    this.setState({ isFetching: false });
   }
 
   rate() {
@@ -54,11 +65,12 @@ class Restaurant extends Component {
         </div>
         <div className="field">
           <Select
-            options={this.locations}
+            options={this.options}
+            loading={this.isFetching}
             search={true}
             onSearchChange={this.nameSearch}
             value={this.props.name}
-            placeholder='Name'
+            placeholder='Name of Restaurant'
           />
         </div>
         <div className="field">

@@ -23466,10 +23466,13 @@
 	      environment: props.environment || 0,
 	      quality: props.quality || 0,
 	      service: props.service || 0,
-	      name: props.name || ''
+	      name: [props.name] || [''],
+	      options: [],
+	      isFetching: false
 	    };
 	
-	    _this.locations = [];
+	    _this.options = [];
+	    _this.isFetching = false;
 	
 	    _this.searcher = new searcher();
 	    _this.rate = _this.rate.bind(_this);
@@ -23485,36 +23488,48 @@
 	    key: 'search',
 	    value: function () {
 	      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(event) {
-	        var name, data;
+	        var name, data, o;
 	        return _regenerator2.default.wrap(function _callee$(_context) {
 	          while (1) {
 	            switch (_context.prev = _context.next) {
 	              case 0:
 	                _context.prev = 0;
+	
+	                this.setState({ isFetching: true });
 	                name = event.target.value;
-	                _context.next = 4;
+	                _context.next = 5;
 	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations({ name: name });
 	
-	              case 4:
+	              case 5:
 	                data = _context.sent;
 	
-	                this.locations = data;
+	                //debugger;
+	                //this.props.locations = data;
+	                o = { options: _.map(data, function (v) {
+	                    return { text: v.name, value: v.id };
+	                  }) };
+	
+	                debugger;
+	                this.setState(o);
 	                //console.log(data);
-	                _context.next = 11;
+	                _context.next = 14;
 	                break;
 	
-	              case 8:
-	                _context.prev = 8;
+	              case 11:
+	                _context.prev = 11;
 	                _context.t0 = _context['catch'](0);
 	
 	                console.log('Error finding google data!', _context.t0);
 	
-	              case 11:
+	              case 14:
+	                this.setState({ isFetching: false });
+	
+	              case 15:
 	              case 'end':
 	                return _context.stop();
 	            }
 	          }
-	        }, _callee, this, [[0, 8]]);
+	        }, _callee, this, [[0, 11]]);
 	      }));
 	
 	      function search(_x) {
@@ -23543,11 +23558,12 @@
 	          'div',
 	          { className: 'field' },
 	          _react2.default.createElement(Select, {
-	            options: this.locations,
+	            options: this.options,
+	            loading: this.isFetching,
 	            search: true,
 	            onSearchChange: this.nameSearch,
 	            value: this.props.name,
-	            placeholder: 'Name'
+	            placeholder: 'Name of Restaurant'
 	          })
 	        ),
 	        _react2.default.createElement(
