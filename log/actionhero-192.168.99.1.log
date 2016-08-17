@@ -45,3 +45,55 @@
 {"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.017Z"}
 {"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.613Z"}
 {"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-04T17:41:08.614Z"}
+{"level":"notice","message":"*** starting actionhero ***","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.213Z"}
+{"level":"info","message":"Redis connection `client` connected","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.225Z"}
+{"level":"info","message":"Redis connection `subscriber` connected","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.227Z"}
+{"level":"info","message":"Redis connection `tasks` connected","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.228Z"}
+{"level":"notice","message":"pid: 8352","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.681Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.683Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8080","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.696Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-17T14:06:20.716Z"}
+{"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-17T14:06:22.046Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-17T14:06:22.047Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-17T14:06:22.050Z"}
+{"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"192.168.99.1 @ 2016-08-17T15:08:49.131Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.332Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.595Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> start","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.598Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.604Z"}
+{"level":"notice","message":"pid: 1280","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.610Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.611Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.618Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8080","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.622Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-17T15:09:00.632Z"}
+{"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-17T15:09:01.224Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-17T15:09:01.225Z"}
+{"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"192.168.99.1 @ 2016-08-17T15:09:03.687Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-17T15:09:14.247Z"}
+{"level":"error","message":"Error: `generateAction` is not a method I can perform.","timestamp":"192.168.99.1 @ 2016-08-17T15:09:14.415Z"}
+{"level":"error","message":"run `actionhero help` to learn more.","timestamp":"192.168.99.1 @ 2016-08-17T15:09:14.419Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-17T15:09:21.461Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-17T15:09:21.625Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> help","timestamp":"192.168.99.1 @ 2016-08-17T15:09:21.630Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-17T15:09:21.630Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-17T15:09:31.907Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-17T15:09:32.076Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> generate action","timestamp":"192.168.99.1 @ 2016-08-17T15:09:32.080Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-17T15:09:32.080Z"}
+{"level":"info","message":" - wrote file 'C:\\Node\\React-MEEQS\\actions\\rate.js'","timestamp":"192.168.99.1 @ 2016-08-17T15:09:32.085Z"}
+{"level":"notice","message":"*** starting actionhero ***","timestamp":"192.168.99.1 @ 2016-08-17T15:12:16.948Z"}
+{"level":"info","message":"Redis connection `client` connected","timestamp":"192.168.99.1 @ 2016-08-17T15:12:16.954Z"}
+{"level":"info","message":"Redis connection `subscriber` connected","timestamp":"192.168.99.1 @ 2016-08-17T15:12:16.956Z"}
+{"level":"info","message":"Redis connection `tasks` connected","timestamp":"192.168.99.1 @ 2016-08-17T15:12:16.956Z"}
+{"level":"notice","message":"pid: 6312","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.168Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.169Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.175Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8080","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.181Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.192Z"}
+{"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.781Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-17T15:12:17.782Z"}
+{"to":"127.0.0.1","action":"rate","params":"{\"action\":\"rate\",\"apiVersion\":1}","duration":4,"error":"Error: name is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-17T15:15:32.920Z"}
+{"to":"127.0.0.1","action":"rate","params":"{\"name\":\"02597328e4c709c082dbe611d71948993e4b8bb8\",\"action\":\"rate\",\"apiVersion\":1}","duration":0,"error":"Error: ratings is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-17T15:16:52.102Z"}
+{"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"0\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"02597328e4c709c082dbe611d71948993e4b8bb8\",\"action\":\"rate\",\"apiVersion\":1}","duration":8,"level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-17T15:18:49.466Z"}
+{"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"0\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"Hash House A Go Go Orlando\",\"action\":\"rate\",\"apiVersion\":1}","duration":7,"level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-17T15:19:05.657Z"}
+{"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"192.168.99.1 @ 2016-08-17T15:19:51.530Z"}

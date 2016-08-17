@@ -32,5 +32,18 @@
 	"Stopping server: %s": "Stopping server: %s",
 	"Server stopped: %s": "Server stopped: %s",
 	"*** ActionHero Stopped ***": "*** ActionHero Stopped ***",
-	"***": "***"
+	"***": "***",
+	"*** Starting ActionHero ***": "*** Starting ActionHero ***",
+	"--------------------------------------": "--------------------------------------",
+	"ACTIONHERO COMMAND >> start": "ACTIONHERO COMMAND >> start",
+	"projectRoot: C:\\Node\\React-MEEQS": "projectRoot: C:\\Node\\React-MEEQS",
+	"actionheroRoot: C:\\Users\\Prometheus\\AppData\\Roaming\\nvm\\v6.3.1\\node_modules\\actionhero": "actionheroRoot: C:\\Users\\Prometheus\\AppData\\Roaming\\nvm\\v6.3.1\\node_modules\\actionhero",
+	"Error: `generateAction` is not a method I can perform.": "Error: `generateAction` is not a method I can perform.",
+	"run `actionhero help` to learn more.": "run `actionhero help` to learn more.",
+	"ACTIONHERO COMMAND >> help": "ACTIONHERO COMMAND >> help",
+	"ACTIONHERO COMMAND >> generate action": "ACTIONHERO COMMAND >> generate action",
+	" - wrote file 'C:\\Node\\React-MEEQS\\actions\\rate.js'": " - wrote file 'C:\\Node\\React-MEEQS\\actions\\rate.js'",
+	"action reloaded: %s @ v%s, %s": "action reloaded: %s @ v%s, %s",
+	"%s is a required parameter for this action": "%s is a required parameter for this action",
+	"[ action @ %s ]": "[ action @ %s ]"
 }

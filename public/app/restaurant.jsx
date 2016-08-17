@@ -4,6 +4,8 @@ const { Input, Button, Select } = require('stardust');
 const _ = require('lodash');
 const searcher = require('./searcher');
 
+/* globals $ */
+
 class Restaurant extends Component {
 
   constructor(props) {
@@ -14,7 +16,7 @@ class Restaurant extends Component {
       environment : props.environment || 0,
       quality: props.quality || 0,
       service: props.service || 0,
-      name: [props.name] || [''],
+      name: props.name || '',
       options: [],
       isFetching: false
     };
@@ -24,28 +26,21 @@ class Restaurant extends Component {
 
     this.searcher = new searcher();
     this.rate = this.rate.bind(this);
+    this.restaurantSelected = this.restaurantSelected.bind(this);
     this.search = this.search.bind(this);
-    this.nameSearch = (event) => {
-      event.persist();
-      _.debounce(this.search, 1000).call(this, event);
-    };
   }
 
-  async search(event) {
+  async search(event, value) {
     try {
       this.setState({ isFetching: true });
-      const name = event.target.value;
+      const name = value;
       const data = await this.searcher
-        .setLocation(this.props.loc.lat, this.props.loc.long)
-        .loadLocations({name});
-      //debugger;
-      //this.props.locations = data;
-      const o = {options: _.map(data, (v) => {
-        return { text: v.name, value: v.id };
+      .setLocation(this.props.loc.lat, this.props.loc.long)
+      .loadLocations({name});
+      const foundRestaurants = {options: _.map(data, (v) => {
+        return { text: v.name, value: v.name };
       })};
-      debugger;
-      this.setState(o);
-      //console.log(data);
+      this.setState(foundRestaurants);
     }
     catch(x) {
       console.log('Error finding google data!', x);
@@ -53,11 +48,22 @@ class Restaurant extends Component {
     this.setState({ isFetching: false });
   }
 
-  rate() {
-    console.log('Rate!');
+  restaurantSelected(e, value) {
+    this.setState({ name: value });
+  }
+
+  async rate() {
+    try {
+      await $.post('../api/rate', this.state);
+    }
+    catch(x) {
+      console.log('bad!', x);
+    }
   }
 
   render() {
+    const { options, isFetching, name } = this.state;
+
     return (
       <div className="ui form segment">
         <div className="field">
@@ -65,28 +71,30 @@ class Restaurant extends Component {
         </div>
         <div className="field">
           <Select
-            options={this.options}
-            loading={this.isFetching}
+            options={options}
+            disabled={isFetching}
+            loading={isFetching}
             search={true}
-            onSearchChange={this.nameSearch}
-            value={this.props.name}
+            onChange={this.restaurantSelected}
+            onSearchChange={this.search}
+            value={name}
             placeholder='Name of Restaurant'
           />
         </div>
         <div className="field">
-          <Input value={this.props.menu} placeholder='Menu' />
+          <Input value={this.props.menu} type="number" placeholder='Menu' />
         </div>
         <div className="field">
-          <Input value={this.props.efficiency} placeholder='Efficiency' />
+          <Input value={this.props.efficiency} type="number" placeholder='Efficiency' />
         </div>
         <div className="field">
-          <Input value={this.props.environment} placeholder='Environment' />
+          <Input value={this.props.environment} type="number" placeholder='Environment' />
         </div>
         <div className="field">
-          <Input value={this.props.quality} placeholder='Quality' />
+          <Input value={this.props.quality} type="number" placeholder='Quality' />
         </div>
         <div className="field">
-          <Input value={this.props.service} placeholder='Service' />
+          <Input value={this.props.service} type="number" placeholder='Service' />
         </div>
         <Button onClick={this.rate}>
           Rate
