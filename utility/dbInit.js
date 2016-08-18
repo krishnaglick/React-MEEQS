@@ -101,22 +101,6 @@ const queryWrapper = (query) => {
   catch(x) {
     errors.push(x);
   }
-  try {
-    await suQueryWrapper(`
-      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    `);
-  }
-  catch(x) {
-    errors.push(x);
-  }
-  try {
-    await queryWrapper(`
-      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    `);
-  }
-  catch(x) {
-    errors.push(x);
-  }
   if(errors.length)
     console.error(errors.join('\n'));
   process.exit(0);
