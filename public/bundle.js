@@ -23787,9 +23787,9 @@
 	
 	var _require = __webpack_require__(/*! stardust */ 278);
 	
-	var Input = _require.Input;
 	var Button = _require.Button;
 	var Select = _require.Select;
+	var Rating = _require.Rating;
 	
 	var _ = __webpack_require__(/*! lodash */ 680);
 	var searcher = __webpack_require__(/*! ./searcher */ 681);
@@ -23810,7 +23810,7 @@
 	      environment: props.environment || 0,
 	      quality: props.quality || 0,
 	      service: props.service || 0,
-	      name: props.name || '',
+	      value: props.value || '',
 	      options: [],
 	      isFetching: false
 	    };
@@ -23822,13 +23822,41 @@
 	    _this.rate = _this.rate.bind(_this);
 	    _this.restaurantSelected = _this.restaurantSelected.bind(_this);
 	    _this.search = _this.search.bind(_this);
+	
+	    _this.updateRating = _this.updateRating.bind(_this);
+	
+	    _this.rateMenu = function (e, _ref) {
+	      var rating = _ref.rating;
+	
+	      _this.updateRating('menu', rating);
+	    };
+	    _this.rateEfficiency = function (e, _ref2) {
+	      var rating = _ref2.rating;
+	
+	      _this.updateRating('efficiency', rating);
+	    };
+	    _this.rateEnvironment = function (e, _ref3) {
+	      var rating = _ref3.rating;
+	
+	      _this.updateRating('environment', rating);
+	    };
+	    _this.rateQuality = function (e, _ref4) {
+	      var rating = _ref4.rating;
+	
+	      _this.updateRating('quality', rating);
+	    };
+	    _this.rateService = function (e, _ref5) {
+	      var rating = _ref5.rating;
+	
+	      _this.updateRating('service', rating);
+	    };
 	    return _this;
 	  }
 	
 	  (0, _createClass3.default)(Restaurant, [{
 	    key: 'search',
 	    value: function () {
-	      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(event, value) {
+	      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(event, value) {
 	        var name, data, foundRestaurants;
 	        return _regenerator2.default.wrap(function _callee$(_context) {
 	          while (1) {
@@ -23843,8 +23871,14 @@
 	
 	              case 5:
 	                data = _context.sent;
-	                foundRestaurants = { options: _.map(data, function (v) {
-	                    return { text: v.name, value: v.name };
+	                foundRestaurants = { options: _.map(data, function (v, i) {
+	                    return {
+	                      text: v.name,
+	                      value: i,
+	                      id: v.id,
+	                      place_id: v.place_id,
+	                      location: v.geometry.location.toString().replace(/(\(|\))/g, '')
+	                    };
 	                  }) };
 	
 	                this.setState(foundRestaurants);
@@ -23869,7 +23903,7 @@
 	      }));
 	
 	      function search(_x, _x2) {
-	        return _ref.apply(this, arguments);
+	        return _ref6.apply(this, arguments);
 	      }
 	
 	      return search;
@@ -23877,40 +23911,49 @@
 	  }, {
 	    key: 'restaurantSelected',
 	    value: function restaurantSelected(e, value) {
-	      this.setState({ name: value });
+	      this.setState({ value: value });
+	    }
+	  }, {
+	    key: 'updateRating',
+	    value: function updateRating(type, value) {
+	      var updater = {};
+	      updater[type] = value;
+	      this.setState(updater);
 	    }
 	  }, {
 	    key: 'rate',
 	    value: function () {
-	      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+	      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+	        var rating;
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
 	                _context2.prev = 0;
-	                _context2.next = 3;
-	                return $.post('../api/rate', this.state);
+	                rating = _.merge(this.state, this.state.options[this.state.value]);
+	                _context2.next = 4;
+	                return $.post('../api/rate', rating);
 	
-	              case 3:
-	                _context2.next = 8;
+	              case 4:
+	                _context2.next = 9;
 	                break;
 	
-	              case 5:
-	                _context2.prev = 5;
+	              case 6:
+	                _context2.prev = 6;
 	                _context2.t0 = _context2['catch'](0);
 	
 	                console.log('bad!', _context2.t0);
 	
-	              case 8:
+	              case 9:
 	              case 'end':
 	                return _context2.stop();
 	            }
 	          }
-	        }, _callee2, this, [[0, 5]]);
+	        }, _callee2, this, [[0, 6]]);
 	      }));
 	
 	      function rate() {
-	        return _ref2.apply(this, arguments);
+	        return _ref7.apply(this, arguments);
 	      }
 	
 	      return rate;
@@ -23921,7 +23964,7 @@
 	      var _state = this.state;
 	      var options = _state.options;
 	      var isFetching = _state.isFetching;
-	      var name = _state.name;
+	      var value = _state.value;
 	
 	
 	      return _react2.default.createElement(
@@ -23942,34 +23985,39 @@
 	            search: true,
 	            onChange: this.restaurantSelected,
 	            onSearchChange: this.search,
-	            value: name,
+	            value: value,
 	            placeholder: 'Name of Restaurant'
 	          })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'field' },
-	          _react2.default.createElement(Input, { value: this.props.menu, type: 'number', placeholder: 'Menu' })
+	          'Menu:',
+	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateMenu })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'field' },
-	          _react2.default.createElement(Input, { value: this.props.efficiency, type: 'number', placeholder: 'Efficiency' })
+	          'Efficiency:',
+	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateEfficiency })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'field' },
-	          _react2.default.createElement(Input, { value: this.props.environment, type: 'number', placeholder: 'Environment' })
+	          'Environment:',
+	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateEnvironment })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'field' },
-	          _react2.default.createElement(Input, { value: this.props.quality, type: 'number', placeholder: 'Quality' })
+	          'Quality:',
+	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateQuality })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'field' },
-	          _react2.default.createElement(Input, { value: this.props.service, type: 'number', placeholder: 'Service' })
+	          'Service:',
+	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateService })
 	        ),
 	        _react2.default.createElement(
 	          Button,

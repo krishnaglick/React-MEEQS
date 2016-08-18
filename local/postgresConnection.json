@@ -1,0 +1,11 @@
+
+{
+  "dialect": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "database": "meeqs",
+  "user": "chef",
+  "password": "swordfish",
+  "debugLevel": 1,
+  "superuser": "postgres"
+}

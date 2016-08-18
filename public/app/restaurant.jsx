@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-const { Input, Button, Select } = require('stardust');
+const { Button, Select, Rating } = require('stardust');
 const _ = require('lodash');
 const searcher = require('./searcher');
 
@@ -16,7 +16,7 @@ class Restaurant extends Component {
       environment : props.environment || 0,
       quality: props.quality || 0,
       service: props.service || 0,
-      name: props.name || '',
+      value: props.value || '',
       options: [],
       isFetching: false
     };
@@ -28,6 +28,24 @@ class Restaurant extends Component {
     this.rate = this.rate.bind(this);
     this.restaurantSelected = this.restaurantSelected.bind(this);
     this.search = this.search.bind(this);
+
+    this.updateRating = this.updateRating.bind(this);
+
+    this.rateMenu = (e, { rating }) => {
+      this.updateRating('menu', rating);
+    };
+    this.rateEfficiency = (e, { rating }) => {
+      this.updateRating('efficiency', rating);
+    };
+    this.rateEnvironment = (e, { rating }) => {
+      this.updateRating('environment', rating);
+    };
+    this.rateQuality = (e, { rating }) => {
+      this.updateRating('quality', rating);
+    };
+    this.rateService = (e, { rating }) => {
+      this.updateRating('service', rating);
+    };
   }
 
   async search(event, value) {
@@ -37,8 +55,14 @@ class Restaurant extends Component {
       const data = await this.searcher
       .setLocation(this.props.loc.lat, this.props.loc.long)
       .loadLocations({name});
-      const foundRestaurants = {options: _.map(data, (v) => {
-        return { text: v.name, value: v.name };
+      const foundRestaurants = {options: _.map(data, (v, i) => {
+        return {
+          text: v.name,
+          value: i,
+          id: v.id,
+          place_id: v.place_id,
+          location: v.geometry.location.toString().replace(/(\(|\))/g, '')
+        };
       })};
       this.setState(foundRestaurants);
     }
@@ -49,12 +73,19 @@ class Restaurant extends Component {
   }
 
   restaurantSelected(e, value) {
-    this.setState({ name: value });
+    this.setState({ value });
+  }
+
+  updateRating(type, value) {
+    const updater = {};
+    updater[type] = value;
+    this.setState(updater);
   }
 
   async rate() {
     try {
-      await $.post('../api/rate', this.state);
+      const rating = _.merge(this.state, this.state.options[this.state.value]);
+      await $.post('../api/rate', rating);
     }
     catch(x) {
       console.log('bad!', x);
@@ -62,7 +93,7 @@ class Restaurant extends Component {
   }
 
   render() {
-    const { options, isFetching, name } = this.state;
+    const { options, isFetching, value } = this.state;
 
     return (
       <div className="ui form segment">
@@ -77,24 +108,29 @@ class Restaurant extends Component {
             search={true}
             onChange={this.restaurantSelected}
             onSearchChange={this.search}
-            value={name}
+            value={value}
             placeholder='Name of Restaurant'
           />
         </div>
         <div className="field">
-          <Input value={this.props.menu} type="number" placeholder='Menu' />
+          Menu: 
+          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateMenu} />
         </div>
         <div className="field">
-          <Input value={this.props.efficiency} type="number" placeholder='Efficiency' />
+          Efficiency: 
+          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateEfficiency} />
         </div>
         <div className="field">
-          <Input value={this.props.environment} type="number" placeholder='Environment' />
+          Environment: 
+          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateEnvironment} />
         </div>
         <div className="field">
-          <Input value={this.props.quality} type="number" placeholder='Quality' />
+          Quality: 
+          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateQuality} />
         </div>
         <div className="field">
-          <Input value={this.props.service} type="number" placeholder='Service' />
+          Service: 
+          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateService} />
         </div>
         <Button onClick={this.rate}>
           Rate

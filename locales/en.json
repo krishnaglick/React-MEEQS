@@ -45,5 +45,6 @@
 	" - wrote file 'C:\\Node\\React-MEEQS\\actions\\rate.js'": " - wrote file 'C:\\Node\\React-MEEQS\\actions\\rate.js'",
 	"action reloaded: %s @ v%s, %s": "action reloaded: %s @ v%s, %s",
 	"%s is a required parameter for this action": "%s is a required parameter for this action",
-	"[ action @ %s ]": "[ action @ %s ]"
+	"[ action @ %s ]": "[ action @ %s ]",
+	"actionheroRoot: C:\\Node\\React-MEEQS\\node_modules\\actionhero": "actionheroRoot: C:\\Node\\React-MEEQS\\node_modules\\actionhero"
 }

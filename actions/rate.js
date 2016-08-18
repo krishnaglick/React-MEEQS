@@ -1,9 +1,11 @@
 
 'use strict';
 
+const uuid = require('uuid');
+
 exports.action = {
   name:                   'rate',
-  description:            'Rates a restuarant',
+  description:            'Rates a restaurant',
   blockedConnectionTypes: [],
   outputExample:          {},
   matchExtensionMimeType: false,
@@ -12,7 +14,9 @@ exports.action = {
   middleware:             [],
 
   inputs: {
-    name: { required: true },
+    place_id: { required: true },
+    text: { required: true },
+    location: { required: true },
     menu: { required: true },
     efficiency: { required: true },
     environment: { required: true },
@@ -20,10 +24,42 @@ exports.action = {
     service: { required: true }
   },
 
-  run: function(api, data, next) {
-    let error = null;
-    console.log(data);
-    // your logic here
-    next(error);
+  run: async function(api, data, next) {
+    try {
+      data.params.uuid = await api.db.oneOrNone(`
+        SELECT id
+        FROM restaurants
+        WHERE google_id = \${place_id};
+      `, data.params);
+      if(data.params.uuid)
+        data.params.uuid = data.params.uuid.id;
+      else
+        data.params.uuid = uuid.v4();
+      await api.db.none(`
+        INSERT INTO restaurants
+        VALUES (
+          \${uuid},
+          \${place_id},
+          \${text},
+          \${location}
+        )
+        ON CONFLICT (google_id) DO UPDATE
+        SET location = \${location}, name = \${text};
+
+        INSERT INTO ratings(restaurant_id, menu, efficiency, environment, quality, service)
+        VALUES (
+          \${uuid},
+          \${menu},
+          \${efficiency},
+          \${environment},
+          \${quality},
+          \${service}
+        );
+      `, data.params);
+      next();
+    }
+    catch(x) {
+      next(x);
+    }
   }
 };
