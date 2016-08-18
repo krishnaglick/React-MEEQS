@@ -1,0 +1,6 @@
+{"level":"notice","message":" - STARTING CLUSTER -","timestamp":"2016-08-18T14:58:00.579Z"}
+{"level":"notice","message":"pid: 3016","timestamp":"2016-08-18T14:58:00.580Z"}
+{"level":"info","message":"starting worker #1","timestamp":"2016-08-18T14:58:00.582Z"}
+{"level":"info","message":"[worker #1 (5184)]: starting","timestamp":"2016-08-18T14:58:03.032Z"}
+{"level":"info","message":"[worker #1 (5184)]: started","timestamp":"2016-08-18T14:58:03.628Z"}
+{"level":"notice","message":"cluster equilibrium state reached with 1 workers","timestamp":"2016-08-18T14:58:03.629Z"}

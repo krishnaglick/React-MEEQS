@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "node node_modules/babel-cli/bin/babel-node  --max_old_space_size=8192 --harmony ./node_modules/actionhero/bin/actionhero",
-    "cluster": "node node_modules/babel-cli/bin/babel-node  --max_old_space_size=8192 --harmony ./node_modules/actionhero/bin/actionhero start cluster --workers=1 --daemon=true",
+    "cluster": "node node_modules/babel-cli/bin/babel-node  --max_old_space_size=8192 --harmony ./node_modules/actionhero/bin/actionhero start cluster --workers=1",
     "actionhero": "actionhero",
     "dbInit": "babel-node utility/dbInit.js",
     "migrateDown": "node node_modules/babel-cli/bin/babel-node utility/migrate.js migrations/structure down",

@@ -197,3 +197,8 @@
 {"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-18T14:55:55.790Z"}
 {"level":"info","message":"ACTIONHERO COMMAND >> help","timestamp":"192.168.99.1 @ 2016-08-18T14:55:55.791Z"}
 {"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-18T14:55:55.792Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-18T14:57:40.421Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-18T14:58:00.173Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-18T14:58:00.574Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> start cluster","timestamp":"192.168.99.1 @ 2016-08-18T14:58:00.574Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-18T14:58:00.575Z"}

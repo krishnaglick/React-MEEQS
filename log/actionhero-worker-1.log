@@ -1,0 +1,11 @@
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:02.620Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.030Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> start","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.030Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.030Z"}
+{"level":"notice","message":"pid: 5184","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.033Z"}
+{"level":"notice","message":"server ID: actionhero-worker-1","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.033Z"}
+{"level":"info","message":"actionhero member actionhero-worker-1 has joined the cluster","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.038Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8082","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.040Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.051Z"}
+{"level":"notice","message":"environment: development","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.625Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.628Z"}
