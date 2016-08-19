@@ -1,12 +1,12 @@
 
 import React, { Component } from 'react';
-const { Button, Select, Rating } = require('stardust');
-const _ = require('lodash');
-const searcher = require('./searcher');
+import { Button, Select, Rating } from 'stardust';
+import _ from 'lodash';
+import searcher from './modules/searcher';
 
 /* globals $ */
 
-class Restaurant extends Component {
+class Rater extends Component {
 
   constructor(props) {
     super(props);
@@ -20,9 +20,6 @@ class Restaurant extends Component {
       options: [],
       isFetching: false
     };
-
-    this.options = [];
-    this.isFetching = false;
 
     this.searcher = new searcher();
     this.rate = this.rate.bind(this);
@@ -104,9 +101,6 @@ class Restaurant extends Component {
     return (
       <div className="ui form segment">
         <div className="field">
-          <div id="map" />
-        </div>
-        <div className="field">
           <Select
             options={options}
             disabled={isFetching}
@@ -120,23 +114,23 @@ class Restaurant extends Component {
         </div>
         <div className="field">
           Menu: 
-          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateMenu} />
+          <Rating icon='star'clearable={true} defaultRating={0} maxRating={4} onRate={this.rateMenu} />
         </div>
         <div className="field">
           Efficiency: 
-          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateEfficiency} />
+          <Rating icon='star'clearable={true} defaultRating={0} maxRating={4} onRate={this.rateEfficiency} />
         </div>
         <div className="field">
           Environment: 
-          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateEnvironment} />
+          <Rating icon='star'clearable={true} defaultRating={0} maxRating={4} onRate={this.rateEnvironment} />
         </div>
         <div className="field">
           Quality: 
-          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateQuality} />
+          <Rating icon='star'clearable={true} defaultRating={0} maxRating={4} onRate={this.rateQuality} />
         </div>
         <div className="field">
           Service: 
-          <Rating icon='star' defaultRating={0} maxRating={4} onRate={this.rateService} />
+          <Rating icon='star'clearable={true} defaultRating={0} maxRating={4} onRate={this.rateService} />
         </div>
         <Button onClick={this.rate}>
           Rate
@@ -147,4 +141,4 @@ class Restaurant extends Component {
 
 }
 
-export default Restaurant;
+export default Rater;

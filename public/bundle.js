@@ -75,9 +75,13 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 117);
 	
-	var _Restaurant = __webpack_require__(/*! ./Restaurant.jsx */ 257);
+	var _rater = __webpack_require__(/*! ./rater.jsx */ 691);
 	
-	var _Restaurant2 = _interopRequireDefault(_Restaurant);
+	var _rater2 = _interopRequireDefault(_rater);
+	
+	var _list = __webpack_require__(/*! ./list.jsx */ 690);
+	
+	var _list2 = _interopRequireDefault(_list);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -104,8 +108,12 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        null,
-	        _react2.default.createElement(_Restaurant2.default, { loc: this.loc })
+	        { className: 'ui centered grid' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'four wide column' },
+	          _react2.default.createElement(_list2.default, { loc: this.loc })
+	        )
 	      );
 	    }
 	  }]);
@@ -23779,320 +23787,7 @@
 	module.exports = ReactMount.renderSubtreeIntoContainer;
 
 /***/ },
-/* 257 */
-/*!****************************!*\
-  !*** ./app/Restaurant.jsx ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 258);
-	
-	var _regenerator2 = _interopRequireDefault(_regenerator);
-	
-	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 261);
-	
-	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-	
-	var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 1);
-	
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-	
-	var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 2);
-	
-	var _createClass3 = _interopRequireDefault(_createClass2);
-	
-	var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 21);
-	
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-	
-	var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 75);
-	
-	var _inherits3 = _interopRequireDefault(_inherits2);
-	
-	var _react = __webpack_require__(/*! react */ 83);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var _require = __webpack_require__(/*! stardust */ 278);
-	
-	var Button = _require.Button;
-	var Select = _require.Select;
-	var Rating = _require.Rating;
-	
-	var _ = __webpack_require__(/*! lodash */ 686);
-	var searcher = __webpack_require__(/*! ./searcher */ 687);
-	
-	/* globals $ */
-	
-	var Restaurant = function (_Component) {
-	  (0, _inherits3.default)(Restaurant, _Component);
-	
-	  function Restaurant(props) {
-	    (0, _classCallCheck3.default)(this, Restaurant);
-	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(Restaurant).call(this, props));
-	
-	    _this.state = {
-	      menu: props.menu || 0,
-	      efficiency: props.efficiency || 0,
-	      environment: props.environment || 0,
-	      quality: props.quality || 0,
-	      service: props.service || 0,
-	      value: props.value || '',
-	      options: [],
-	      isFetching: false
-	    };
-	
-	    _this.options = [];
-	    _this.isFetching = false;
-	
-	    _this.searcher = new searcher();
-	    _this.rate = _this.rate.bind(_this);
-	    _this.restaurantSelected = _this.restaurantSelected.bind(_this);
-	
-	    _this.search = _.debounce(_this.search.bind(_this), 1000);
-	
-	    _this.updateRating = _this.updateRating.bind(_this);
-	
-	    _this.rateMenu = function (e, _ref) {
-	      var rating = _ref.rating;
-	
-	      _this.updateRating('menu', rating);
-	    };
-	    _this.rateEfficiency = function (e, _ref2) {
-	      var rating = _ref2.rating;
-	
-	      _this.updateRating('efficiency', rating);
-	    };
-	    _this.rateEnvironment = function (e, _ref3) {
-	      var rating = _ref3.rating;
-	
-	      _this.updateRating('environment', rating);
-	    };
-	    _this.rateQuality = function (e, _ref4) {
-	      var rating = _ref4.rating;
-	
-	      _this.updateRating('quality', rating);
-	    };
-	    _this.rateService = function (e, _ref5) {
-	      var rating = _ref5.rating;
-	
-	      _this.updateRating('service', rating);
-	    };
-	    return _this;
-	  }
-	
-	  (0, _createClass3.default)(Restaurant, [{
-	    key: 'search',
-	    value: function () {
-	      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(event, value) {
-	        var name, data, foundRestaurants;
-	        return _regenerator2.default.wrap(function _callee$(_context) {
-	          while (1) {
-	            switch (_context.prev = _context.next) {
-	              case 0:
-	                if (value) {
-	                  _context.next = 2;
-	                  break;
-	                }
-	
-	                return _context.abrupt('return');
-	
-	              case 2:
-	                _context.prev = 2;
-	
-	                this.setState({ isFetching: true });
-	                name = value;
-	                _context.next = 7;
-	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations({ name: name });
-	
-	              case 7:
-	                data = _context.sent;
-	                foundRestaurants = { options: _.map(data, function (v) {
-	                    return {
-	                      text: v.name + ' - ' + v.vicinity,
-	                      value: v.name + ' - ' + v.vicinity,
-	                      name: v.name,
-	                      id: v.id,
-	                      place_id: v.place_id,
-	                      location: v.vicinity
-	                    };
-	                  }) };
-	
-	                this.setState(foundRestaurants);
-	                _context.next = 15;
-	                break;
-	
-	              case 12:
-	                _context.prev = 12;
-	                _context.t0 = _context['catch'](2);
-	
-	                console.log('Error finding google data!', _context.t0);
-	
-	              case 15:
-	                this.setState({ isFetching: false });
-	
-	              case 16:
-	              case 'end':
-	                return _context.stop();
-	            }
-	          }
-	        }, _callee, this, [[2, 12]]);
-	      }));
-	
-	      function search(_x, _x2) {
-	        return _ref6.apply(this, arguments);
-	      }
-	
-	      return search;
-	    }()
-	  }, {
-	    key: 'restaurantSelected',
-	    value: function restaurantSelected(e, value) {
-	      this.setState({ value: value });
-	    }
-	  }, {
-	    key: 'updateRating',
-	    value: function updateRating(type, value) {
-	      var updater = {};
-	      updater[type] = value;
-	      this.setState(updater);
-	    }
-	  }, {
-	    key: 'rate',
-	    value: function () {
-	      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-	        var _this2 = this;
-	
-	        var selectionData, rating;
-	        return _regenerator2.default.wrap(function _callee2$(_context2) {
-	          while (1) {
-	            switch (_context2.prev = _context2.next) {
-	              case 0:
-	                _context2.prev = 0;
-	                selectionData = _.filter(this.state.options, function (o) {
-	                  return o.name + ' - ' + o.location === _this2.state.value;
-	                })[0];
-	
-	                if (selectionData) {
-	                  _context2.next = 4;
-	                  break;
-	                }
-	
-	                throw 'No matching restaurant, something\'s screwy!';
-	
-	              case 4:
-	                rating = _.mergeWith({}, this.state, selectionData);
-	                _context2.next = 7;
-	                return $.post('../api/rate', rating);
-	
-	              case 7:
-	                _context2.next = 12;
-	                break;
-	
-	              case 9:
-	                _context2.prev = 9;
-	                _context2.t0 = _context2['catch'](0);
-	
-	                console.log('bad!', _context2.t0);
-	
-	              case 12:
-	              case 'end':
-	                return _context2.stop();
-	            }
-	          }
-	        }, _callee2, this, [[0, 9]]);
-	      }));
-	
-	      function rate() {
-	        return _ref7.apply(this, arguments);
-	      }
-	
-	      return rate;
-	    }()
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _state = this.state;
-	      var options = _state.options;
-	      var isFetching = _state.isFetching;
-	      var value = _state.value;
-	
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'ui form segment' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          _react2.default.createElement('div', { id: 'map' })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          _react2.default.createElement(Select, {
-	            options: options,
-	            disabled: isFetching,
-	            loading: isFetching,
-	            search: true,
-	            onChange: this.restaurantSelected,
-	            onSearchChange: this.search,
-	            value: value,
-	            placeholder: 'Search for a Restaurant!'
-	          })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          'Menu:',
-	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateMenu })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          'Efficiency:',
-	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateEfficiency })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          'Environment:',
-	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateEnvironment })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          'Quality:',
-	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateQuality })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'field' },
-	          'Service:',
-	          _react2.default.createElement(Rating, { icon: 'star', defaultRating: 0, maxRating: 4, onRate: this.rateService })
-	        ),
-	        _react2.default.createElement(
-	          Button,
-	          { onClick: this.rate },
-	          'Rate'
-	        )
-	      );
-	    }
-	  }]);
-	  return Restaurant;
-	}(_react.Component);
-	
-	exports.default = Restaurant;
-
-/***/ },
+/* 257 */,
 /* 258 */
 /*!**********************************************!*\
   !*** ./~/babel-runtime/regenerator/index.js ***!
@@ -78324,10 +78019,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../webpack/buildin/module.js */ 404)(module)))
 
 /***/ },
-/* 687 */
-/*!*************************!*\
-  !*** ./app/searcher.js ***!
-  \*************************/
+/* 687 */,
+/* 688 */
+/*!*********************************!*\
+  !*** ./app/modules/searcher.js ***!
+  \*********************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -78362,14 +78058,16 @@
 	    }
 	  }, {
 	    key: 'loadLocations',
-	    value: function loadLocations(req) {
+	    value: function loadLocations() {
 	      var _this = this;
 	
-	      if (!req.name) throw 'Request needs a name!';
+	      var req = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	      //if(!req.name) throw 'Request needs a name!';
 	
 	      req.location = this.location = req.location || this.location;
 	      req.radius = req.radius || 10000;
-	      req.types = req.types && req.types.length ? req.types : ['food'];
+	      req.types = req.types && req.types.length ? req.types : ['food', 'restaurant'];
 	
 	      this.map = this.map || new google.maps.Map(document.getElementById('map'), {
 	        center: this.location,
@@ -78391,6 +78089,567 @@
 	}();
 	
 	module.exports = Searcher;
+
+/***/ },
+/* 689 */,
+/* 690 */
+/*!**********************!*\
+  !*** ./app/list.jsx ***!
+  \**********************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 258);
+	
+	var _regenerator2 = _interopRequireDefault(_regenerator);
+	
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 261);
+	
+	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+	
+	var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 1);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 2);
+	
+	var _createClass3 = _interopRequireDefault(_createClass2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 21);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 75);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _restaurant = __webpack_require__(/*! ./modules/restaurant.jsx */ 692);
+	
+	var _restaurant2 = _interopRequireDefault(_restaurant);
+	
+	var _searcher = __webpack_require__(/*! ./modules/searcher */ 688);
+	
+	var _searcher2 = _interopRequireDefault(_searcher);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 686);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* globals $, ForEac */
+	
+	var List = function (_Component) {
+	  (0, _inherits3.default)(List, _Component);
+	
+	  function List(props) {
+	    (0, _classCallCheck3.default)(this, List);
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(List).call(this, props));
+	
+	    _this.state = {
+	      locations: []
+	    };
+	
+	    _this.searcher = new _searcher2.default();
+	    _this.loadRestaurants = _this.loadRestaurants.bind(_this);
+	
+	    if (!_this.props.loc.lat) {
+	      (function () {
+	        var finder = setInterval(function () {
+	          if (_this.props.loc.lat) {
+	            _this.loadRestaurants();
+	            clearInterval(finder);
+	          }
+	        }, 500);
+	      })();
+	    }
+	    return _this;
+	  }
+	
+	  (0, _createClass3.default)(List, [{
+	    key: 'loadRestaurants',
+	    value: function () {
+	      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+	        var locations;
+	        return _regenerator2.default.wrap(function _callee$(_context) {
+	          while (1) {
+	            switch (_context.prev = _context.next) {
+	              case 0:
+	                _context.prev = 0;
+	                _context.next = 3;
+	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations();
+	
+	              case 3:
+	                locations = _context.sent;
+	
+	                console.log(locations);
+	                //debugger;
+	                this.setState({ locations: locations });
+	                _context.next = 11;
+	                break;
+	
+	              case 8:
+	                _context.prev = 8;
+	                _context.t0 = _context['catch'](0);
+	
+	                console.log('Error loading restaurants for list!', _context.t0);
+	
+	              case 11:
+	              case 'end':
+	                return _context.stop();
+	            }
+	          }
+	        }, _callee, this, [[0, 8]]);
+	      }));
+	
+	      function loadRestaurants() {
+	        return _ref.apply(this, arguments);
+	      }
+	
+	      return loadRestaurants;
+	    }()
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var locations = this.state.locations;
+	
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'ui form segment' },
+	        _lodash2.default.map(locations, function (location) {
+	          return _react2.default.createElement(
+	            'div',
+	            { className: 'field', key: location.id },
+	            _react2.default.createElement(_restaurant2.default, { location: location })
+	          );
+	        })
+	      );
+	    }
+	  }]);
+	  return List;
+	}(_react.Component);
+	
+	exports.default = List;
+
+/***/ },
+/* 691 */
+/*!***********************!*\
+  !*** ./app/rater.jsx ***!
+  \***********************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _regenerator = __webpack_require__(/*! babel-runtime/regenerator */ 258);
+	
+	var _regenerator2 = _interopRequireDefault(_regenerator);
+	
+	var _asyncToGenerator2 = __webpack_require__(/*! babel-runtime/helpers/asyncToGenerator */ 261);
+	
+	var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+	
+	var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 1);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 2);
+	
+	var _createClass3 = _interopRequireDefault(_createClass2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 21);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 75);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _stardust = __webpack_require__(/*! stardust */ 278);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 686);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _searcher = __webpack_require__(/*! ./modules/searcher */ 688);
+	
+	var _searcher2 = _interopRequireDefault(_searcher);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* globals $ */
+	
+	var Rater = function (_Component) {
+	  (0, _inherits3.default)(Rater, _Component);
+	
+	  function Rater(props) {
+	    (0, _classCallCheck3.default)(this, Rater);
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(Rater).call(this, props));
+	
+	    _this.state = {
+	      menu: props.menu || 0,
+	      efficiency: props.efficiency || 0,
+	      environment: props.environment || 0,
+	      quality: props.quality || 0,
+	      service: props.service || 0,
+	      value: props.value || '',
+	      options: [],
+	      isFetching: false
+	    };
+	
+	    _this.searcher = new _searcher2.default();
+	    _this.rate = _this.rate.bind(_this);
+	    _this.restaurantSelected = _this.restaurantSelected.bind(_this);
+	
+	    _this.search = _lodash2.default.debounce(_this.search.bind(_this), 1000);
+	
+	    _this.updateRating = _this.updateRating.bind(_this);
+	
+	    _this.rateMenu = function (e, _ref) {
+	      var rating = _ref.rating;
+	
+	      _this.updateRating('menu', rating);
+	    };
+	    _this.rateEfficiency = function (e, _ref2) {
+	      var rating = _ref2.rating;
+	
+	      _this.updateRating('efficiency', rating);
+	    };
+	    _this.rateEnvironment = function (e, _ref3) {
+	      var rating = _ref3.rating;
+	
+	      _this.updateRating('environment', rating);
+	    };
+	    _this.rateQuality = function (e, _ref4) {
+	      var rating = _ref4.rating;
+	
+	      _this.updateRating('quality', rating);
+	    };
+	    _this.rateService = function (e, _ref5) {
+	      var rating = _ref5.rating;
+	
+	      _this.updateRating('service', rating);
+	    };
+	    return _this;
+	  }
+	
+	  (0, _createClass3.default)(Rater, [{
+	    key: 'search',
+	    value: function () {
+	      var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(event, value) {
+	        var name, data, foundRestaurants;
+	        return _regenerator2.default.wrap(function _callee$(_context) {
+	          while (1) {
+	            switch (_context.prev = _context.next) {
+	              case 0:
+	                if (value) {
+	                  _context.next = 2;
+	                  break;
+	                }
+	
+	                return _context.abrupt('return');
+	
+	              case 2:
+	                _context.prev = 2;
+	
+	                this.setState({ isFetching: true });
+	                name = value;
+	                _context.next = 7;
+	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations({ name: name });
+	
+	              case 7:
+	                data = _context.sent;
+	                foundRestaurants = { options: _lodash2.default.map(data, function (v) {
+	                    return {
+	                      text: v.name + ' - ' + v.vicinity,
+	                      value: v.name + ' - ' + v.vicinity,
+	                      name: v.name,
+	                      id: v.id,
+	                      place_id: v.place_id,
+	                      location: v.vicinity
+	                    };
+	                  }) };
+	
+	                this.setState(foundRestaurants);
+	                _context.next = 15;
+	                break;
+	
+	              case 12:
+	                _context.prev = 12;
+	                _context.t0 = _context['catch'](2);
+	
+	                console.log('Error finding google data!', _context.t0);
+	
+	              case 15:
+	                this.setState({ isFetching: false });
+	
+	              case 16:
+	              case 'end':
+	                return _context.stop();
+	            }
+	          }
+	        }, _callee, this, [[2, 12]]);
+	      }));
+	
+	      function search(_x, _x2) {
+	        return _ref6.apply(this, arguments);
+	      }
+	
+	      return search;
+	    }()
+	  }, {
+	    key: 'restaurantSelected',
+	    value: function restaurantSelected(e, value) {
+	      this.setState({ value: value });
+	    }
+	  }, {
+	    key: 'updateRating',
+	    value: function updateRating(type, value) {
+	      var updater = {};
+	      updater[type] = value;
+	      this.setState(updater);
+	    }
+	  }, {
+	    key: 'rate',
+	    value: function () {
+	      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+	        var _this2 = this;
+	
+	        var selectionData, rating;
+	        return _regenerator2.default.wrap(function _callee2$(_context2) {
+	          while (1) {
+	            switch (_context2.prev = _context2.next) {
+	              case 0:
+	                _context2.prev = 0;
+	                selectionData = _lodash2.default.filter(this.state.options, function (o) {
+	                  return o.name + ' - ' + o.location === _this2.state.value;
+	                })[0];
+	
+	                if (selectionData) {
+	                  _context2.next = 4;
+	                  break;
+	                }
+	
+	                throw 'No matching restaurant, something\'s screwy!';
+	
+	              case 4:
+	                rating = _lodash2.default.mergeWith({}, this.state, selectionData);
+	                _context2.next = 7;
+	                return $.post('../api/rate', rating);
+	
+	              case 7:
+	                _context2.next = 12;
+	                break;
+	
+	              case 9:
+	                _context2.prev = 9;
+	                _context2.t0 = _context2['catch'](0);
+	
+	                console.log('bad!', _context2.t0);
+	
+	              case 12:
+	              case 'end':
+	                return _context2.stop();
+	            }
+	          }
+	        }, _callee2, this, [[0, 9]]);
+	      }));
+	
+	      function rate() {
+	        return _ref7.apply(this, arguments);
+	      }
+	
+	      return rate;
+	    }()
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _state = this.state;
+	      var options = _state.options;
+	      var isFetching = _state.isFetching;
+	      var value = _state.value;
+	
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'ui form segment' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'field' },
+	          _react2.default.createElement(_stardust.Select, {
+	            options: options,
+	            disabled: isFetching,
+	            loading: isFetching,
+	            search: true,
+	            onChange: this.restaurantSelected,
+	            onSearchChange: this.search,
+	            value: value,
+	            placeholder: 'Search for a Restaurant!'
+	          })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'field' },
+	          'Menu:',
+	          _react2.default.createElement(_stardust.Rating, { icon: 'star', clearable: true, defaultRating: 0, maxRating: 4, onRate: this.rateMenu })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'field' },
+	          'Efficiency:',
+	          _react2.default.createElement(_stardust.Rating, { icon: 'star', clearable: true, defaultRating: 0, maxRating: 4, onRate: this.rateEfficiency })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'field' },
+	          'Environment:',
+	          _react2.default.createElement(_stardust.Rating, { icon: 'star', clearable: true, defaultRating: 0, maxRating: 4, onRate: this.rateEnvironment })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'field' },
+	          'Quality:',
+	          _react2.default.createElement(_stardust.Rating, { icon: 'star', clearable: true, defaultRating: 0, maxRating: 4, onRate: this.rateQuality })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'field' },
+	          'Service:',
+	          _react2.default.createElement(_stardust.Rating, { icon: 'star', clearable: true, defaultRating: 0, maxRating: 4, onRate: this.rateService })
+	        ),
+	        _react2.default.createElement(
+	          _stardust.Button,
+	          { onClick: this.rate },
+	          'Rate'
+	        )
+	      );
+	    }
+	  }]);
+	  return Rater;
+	}(_react.Component);
+	
+	exports.default = Rater;
+
+/***/ },
+/* 692 */
+/*!************************************!*\
+  !*** ./app/modules/restaurant.jsx ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 1);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 2);
+	
+	var _createClass3 = _interopRequireDefault(_createClass2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 21);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 75);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _stardust = __webpack_require__(/*! stardust */ 278);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Restaurant = function (_Component) {
+	  (0, _inherits3.default)(Restaurant, _Component);
+	
+	  function Restaurant(props) {
+	    (0, _classCallCheck3.default)(this, Restaurant);
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(Restaurant).call(this, props));
+	
+	    _this.state = {
+	      location: props.location.vicinity,
+	      name: props.location.name,
+	      place_id: props.location.place_id
+	    };
+	
+	    _this.rate = _this.rate.bind(_this);
+	    return _this;
+	  }
+	
+	  (0, _createClass3.default)(Restaurant, [{
+	    key: 'rate',
+	    value: function rate() {
+	      //Things here
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _state = this.state;
+	      var name = _state.name;
+	      var location = _state.location;
+	
+	
+	      return _react2.default.createElement(
+	        _stardust.Card,
+	        null,
+	        _react2.default.createElement(
+	          _stardust.Card.Content,
+	          null,
+	          _react2.default.createElement(
+	            _stardust.Card.Header,
+	            null,
+	            name
+	          ),
+	          _react2.default.createElement(
+	            _stardust.Card.Meta,
+	            null,
+	            location
+	          )
+	        ),
+	        _react2.default.createElement(
+	          _stardust.Card.Content,
+	          { extra: true },
+	          _react2.default.createElement(
+	            _stardust.Button,
+	            { onClick: this.rate },
+	            'Rate'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	  return Restaurant;
+	}(_react.Component);
+	
+	exports.default = Restaurant;
 
 /***/ }
 /******/ ]);

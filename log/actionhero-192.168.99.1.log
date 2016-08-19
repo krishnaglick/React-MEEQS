@@ -227,3 +227,15 @@
 {"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"0\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"action\":\"rate\",\"apiVersion\":1}","duration":0,"error":"Error: place_id is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-19T03:54:36.346Z"}
 {"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"0\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"Bento Cafe\",\"place_id\":\"ChIJVYiZtKl_54gRSZHV233g9S8\",\"location\":\"7335 Sand Lake Road, Orlando\",\"action\":\"rate\",\"apiVersion\":1,\"uuid\":\"2770e70f-4331-41f0-a56a-49a1a3ca5537\"}","duration":440,"level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-19T03:54:51.358Z"}
 {"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"192.168.99.1 @ 2016-08-19T04:00:01.323Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.109Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.853Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> start","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.853Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.854Z"}
+{"level":"notice","message":"pid: 812","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.862Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.863Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.870Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8082","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.875Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-19T12:56:20.902Z"}
+{"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-19T12:56:21.843Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-19T12:56:21.846Z"}
+{"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"3\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"Bento Cafe\",\"place_id\":\"ChIJVYiZtKl_54gRSZHV233g9S8\",\"location\":\"7335 Sand Lake Road, Orlando\",\"action\":\"rate\",\"apiVersion\":1,\"uuid\":\"2770e70f-4331-41f0-a56a-49a1a3ca5537\"}","duration":125,"level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-19T13:00:43.092Z"}

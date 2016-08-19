@@ -12,12 +12,12 @@ class Searcher {
     return (this.service = this.service || new google.maps.places.PlacesService(this.map));
   }
 
-  loadLocations(req) {
-    if(!req.name) throw 'Request needs a name!';
+  loadLocations(req = {}) {
+    //if(!req.name) throw 'Request needs a name!';
 
     req.location = this.location = req.location || this.location;
     req.radius = req.radius || 10000;
-    req.types = req.types && req.types.length ? req.types : ['food'];
+    req.types = req.types && req.types.length ? req.types : ['food', 'restaurant'];
 
     this.map = this.map || new google.maps.Map(document.getElementById('map'), {
       center: this.location,

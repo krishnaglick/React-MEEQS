@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import {render} from 'react-dom';
 
-import Restaurant from './Restaurant.jsx';
+import Rater from './rater.jsx';
+import List from './list.jsx';
 
 /* globals document, navigator */
 
@@ -15,10 +16,13 @@ class App extends Component {
       this.loc.long = position.coords.longitude;
     });
   }
+
   render() {
     return (
-      <div>
-        <Restaurant loc={this.loc} />
+      <div className="ui centered grid">
+        <div className="four wide column">
+          <List loc={this.loc} />
+        </div>
       </div>
     );
   }
