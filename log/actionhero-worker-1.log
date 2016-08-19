@@ -9,3 +9,4 @@
 {"level":"notice","message":"Starting server: `websocket`","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.051Z"}
 {"level":"notice","message":"environment: development","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.625Z"}
 {"level":"notice","message":"*** ActionHero Started ***","timestamp":"actionhero-worker-1 @ 2016-08-18T14:58:03.628Z"}
+{"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"actionhero-worker-1 @ 2016-08-18T15:03:25.530Z"}

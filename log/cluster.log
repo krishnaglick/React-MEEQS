@@ -4,3 +4,12 @@
 {"level":"info","message":"[worker #1 (5184)]: starting","timestamp":"2016-08-18T14:58:03.032Z"}
 {"level":"info","message":"[worker #1 (5184)]: started","timestamp":"2016-08-18T14:58:03.628Z"}
 {"level":"notice","message":"cluster equilibrium state reached with 1 workers","timestamp":"2016-08-18T14:58:03.629Z"}
+{"level":"info","message":"Signal: SIGINT","timestamp":"2016-08-18T15:03:25.523Z"}
+{"level":"info","message":"1 workers running, waiting on stop","timestamp":"2016-08-18T15:03:25.526Z"}
+{"level":"info","message":"signaling worker #1 to stop","timestamp":"2016-08-18T15:03:25.527Z"}
+{"level":"info","message":"[worker #1 (5184)]: stopping","timestamp":"2016-08-18T15:03:25.529Z"}
+{"level":"info","message":"[worker #1 (5184)]: stopped","timestamp":"2016-08-18T15:03:25.539Z"}
+{"level":"info","message":"Signal: SIGINT","timestamp":"2016-08-18T15:03:25.756Z"}
+{"level":"info","message":"1 workers running, waiting on stop","timestamp":"2016-08-18T15:03:25.757Z"}
+{"level":"info","message":"[worker #1 (5184)]: exited","timestamp":"2016-08-18T15:03:25.873Z"}
+{"level":"notice","message":"all workers stopped","timestamp":"2016-08-18T15:03:28.527Z"}

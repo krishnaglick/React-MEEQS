@@ -105,11 +105,6 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Hello React!'
-	        ),
 	        _react2.default.createElement(_Restaurant2.default, { loc: this.loc })
 	      );
 	    }
@@ -1973,7 +1968,6 @@
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-	
 	var process = module.exports = {};
 	
 	// cached from whatever global is present so that test runners that stub it
@@ -1985,21 +1979,63 @@
 	var cachedClearTimeout;
 	
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        cachedSetTimeout = setTimeout;
+	    } catch (e) {
+	        cachedSetTimeout = function () {
+	            throw new Error('setTimeout is not defined');
+	        }
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        cachedClearTimeout = clearTimeout;
+	    } catch (e) {
+	        cachedClearTimeout = function () {
+	            throw new Error('clearTimeout is not defined');
+	        }
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+	
+	
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+	
+	
+	
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -2024,7 +2060,7 @@
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 	
 	    var len = queue.length;
@@ -2041,7 +2077,7 @@
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 	
 	process.nextTick = function (fun) {
@@ -2053,7 +2089,7 @@
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 	
@@ -23791,8 +23827,8 @@
 	var Select = _require.Select;
 	var Rating = _require.Rating;
 	
-	var _ = __webpack_require__(/*! lodash */ 680);
-	var searcher = __webpack_require__(/*! ./searcher */ 681);
+	var _ = __webpack_require__(/*! lodash */ 686);
+	var searcher = __webpack_require__(/*! ./searcher */ 687);
 	
 	/* globals $ */
 	
@@ -23821,7 +23857,8 @@
 	    _this.searcher = new searcher();
 	    _this.rate = _this.rate.bind(_this);
 	    _this.restaurantSelected = _this.restaurantSelected.bind(_this);
-	    _this.search = _this.search.bind(_this);
+	
+	    _this.search = _.debounce(_this.search.bind(_this), 1000);
 	
 	    _this.updateRating = _this.updateRating.bind(_this);
 	
@@ -23862,44 +23899,53 @@
 	          while (1) {
 	            switch (_context.prev = _context.next) {
 	              case 0:
-	                _context.prev = 0;
+	                if (value) {
+	                  _context.next = 2;
+	                  break;
+	                }
+	
+	                return _context.abrupt('return');
+	
+	              case 2:
+	                _context.prev = 2;
 	
 	                this.setState({ isFetching: true });
 	                name = value;
-	                _context.next = 5;
+	                _context.next = 7;
 	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations({ name: name });
 	
-	              case 5:
+	              case 7:
 	                data = _context.sent;
-	                foundRestaurants = { options: _.map(data, function (v, i) {
+	                foundRestaurants = { options: _.map(data, function (v) {
 	                    return {
-	                      text: v.name,
-	                      value: i,
+	                      text: v.name + ' - ' + v.vicinity,
+	                      value: v.name + ' - ' + v.vicinity,
+	                      name: v.name,
 	                      id: v.id,
 	                      place_id: v.place_id,
-	                      location: v.geometry.location.toString().replace(/(\(|\))/g, '')
+	                      location: v.vicinity
 	                    };
 	                  }) };
 	
 	                this.setState(foundRestaurants);
-	                _context.next = 13;
+	                _context.next = 15;
 	                break;
 	
-	              case 10:
-	                _context.prev = 10;
-	                _context.t0 = _context['catch'](0);
+	              case 12:
+	                _context.prev = 12;
+	                _context.t0 = _context['catch'](2);
 	
 	                console.log('Error finding google data!', _context.t0);
 	
-	              case 13:
+	              case 15:
 	                this.setState({ isFetching: false });
 	
-	              case 14:
+	              case 16:
 	              case 'end':
 	                return _context.stop();
 	            }
 	          }
-	        }, _callee, this, [[0, 10]]);
+	        }, _callee, this, [[2, 12]]);
 	      }));
 	
 	      function search(_x, _x2) {
@@ -23924,32 +23970,46 @@
 	    key: 'rate',
 	    value: function () {
 	      var _ref7 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
-	        var rating;
+	        var _this2 = this;
+	
+	        var selectionData, rating;
 	        return _regenerator2.default.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
 	                _context2.prev = 0;
-	                rating = _.merge(this.state, this.state.options[this.state.value]);
-	                _context2.next = 4;
-	                return $.post('../api/rate', rating);
+	                selectionData = _.filter(this.state.options, function (o) {
+	                  return o.name + ' - ' + o.location === _this2.state.value;
+	                })[0];
+	
+	                if (selectionData) {
+	                  _context2.next = 4;
+	                  break;
+	                }
+	
+	                throw 'No matching restaurant, something\'s screwy!';
 	
 	              case 4:
-	                _context2.next = 9;
+	                rating = _.mergeWith({}, this.state, selectionData);
+	                _context2.next = 7;
+	                return $.post('../api/rate', rating);
+	
+	              case 7:
+	                _context2.next = 12;
 	                break;
 	
-	              case 6:
-	                _context2.prev = 6;
+	              case 9:
+	                _context2.prev = 9;
 	                _context2.t0 = _context2['catch'](0);
 	
 	                console.log('bad!', _context2.t0);
 	
-	              case 9:
+	              case 12:
 	              case 'end':
 	                return _context2.stop();
 	            }
 	          }
-	        }, _callee2, this, [[0, 6]]);
+	        }, _callee2, this, [[0, 9]]);
 	      }));
 	
 	      function rate() {
@@ -23986,7 +24046,7 @@
 	            onChange: this.restaurantSelected,
 	            onSearchChange: this.search,
 	            value: value,
-	            placeholder: 'Name of Restaurant'
+	            placeholder: 'Search for a Restaurant!'
 	          })
 	        ),
 	        _react2.default.createElement(
@@ -25603,7 +25663,7 @@
 	  });
 	});
 	
-	var _deprecatedComponents = __webpack_require__(/*! ./deprecatedComponents */ 676);
+	var _deprecatedComponents = __webpack_require__(/*! ./deprecatedComponents */ 682);
 	
 	Object.keys(_deprecatedComponents).forEach(function (key) {
 	  if (key === "default" || key === "__esModule") return;
@@ -25615,7 +25675,7 @@
 	  });
 	});
 	
-	__webpack_require__(/*! ./lib/jquery */ 678);
+	__webpack_require__(/*! ./lib/jquery */ 684);
 
 /***/ },
 /* 279 */
@@ -42299,6 +42359,10 @@
 	
 	var _union3 = _interopRequireDefault(_union2);
 	
+	var _some2 = __webpack_require__(/*! lodash/some */ 460);
+	
+	var _some3 = _interopRequireDefault(_some2);
+	
 	var _includes2 = __webpack_require__(/*! lodash/includes */ 475);
 	
 	var _includes3 = _interopRequireDefault(_includes2);
@@ -42329,6 +42393,8 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
+	var _factories = __webpack_require__(/*! ../../factories */ 567);
+	
 	var _elements = __webpack_require__(/*! ../../elements */ 281);
 	
 	var _DropdownDivider = __webpack_require__(/*! ./DropdownDivider */ 602);
@@ -42357,7 +42423,8 @@
 	  name: 'Dropdown',
 	  type: _lib.META.TYPES.MODULE,
 	  props: {
-	    pointing: ['bottom left', 'bottom right']
+	    pointing: ['bottom left', 'bottom right'],
+	    additionPosition: ['top', 'bottom']
 	  }
 	};
 	
@@ -42424,12 +42491,18 @@
 	      if (_lib.keyboardKey.getCode(e) !== _lib.keyboardKey.Enter) return;
 	      e.preventDefault();
 	
-	      var multiple = _this.props.multiple;
+	      var _this$props = _this.props;
+	      var multiple = _this$props.multiple;
+	      var onAddItem = _this$props.onAddItem;
+	      var options = _this$props.options;
 	
 	      var value = _this.getSelectedItemValue();
 	
 	      // prevent selecting null if there was no selected item value
 	      if (!value) return;
+	
+	      // notify the onAddItem prop if this is a new value
+	      if (onAddItem && !(0, _some3.default)(options, { text: value })) onAddItem(value);
 	
 	      // notify the onChange prop that the user is trying to change value
 	      if (multiple) {
@@ -42447,9 +42520,9 @@
 	      debug(_lib.keyboardKey.getName(e));
 	      if (_lib.keyboardKey.getCode(e) !== _lib.keyboardKey.Backspace) return;
 	
-	      var _this$props = _this.props;
-	      var multiple = _this$props.multiple;
-	      var search = _this$props.search;
+	      var _this$props2 = _this.props;
+	      var multiple = _this$props2.multiple;
+	      var search = _this$props2.search;
 	      var _this$state = _this.state;
 	      var searchQuery = _this$state.searchQuery;
 	      var value = _this$state.value;
@@ -42480,7 +42553,10 @@
 	    }, _this.handleItemClick = function (e, value) {
 	      debug('handleItemClick()');
 	      debug(value);
-	      var multiple = _this.props.multiple;
+	      var _this$props3 = _this.props;
+	      var multiple = _this$props3.multiple;
+	      var onAddItem = _this$props3.onAddItem;
+	      var options = _this$props3.options;
 	
 	      // prevent toggle() in handleClick()
 	
@@ -42489,6 +42565,9 @@
 	      if (multiple) {
 	        e.nativeEvent.stopImmediatePropagation();
 	      }
+	
+	      // notify the onAddItem prop if this is a new value
+	      if (onAddItem && !(0, _some3.default)(options, { value: value })) onAddItem(value);
 	
 	      // notify the onChange prop that the user is trying to change value
 	      if (multiple) {
@@ -42527,9 +42606,9 @@
 	      debug(e.target.value);
 	      // prevent propagating to this.props.onChange()
 	      e.stopPropagation();
-	      var _this$props2 = _this.props;
-	      var search = _this$props2.search;
-	      var onSearchChange = _this$props2.onSearchChange;
+	      var _this$props4 = _this.props;
+	      var search = _this$props4.search;
+	      var onSearchChange = _this$props4.onSearchChange;
 	      var open = _this.state.open;
 	
 	      var newQuery = e.target.value;
@@ -42554,10 +42633,13 @@
 	        searchWidth: searchWidth
 	      });
 	    }, _this.getMenuOptions = function () {
-	      var _this$props3 = _this.props;
-	      var multiple = _this$props3.multiple;
-	      var options = _this$props3.options;
-	      var search = _this$props3.search;
+	      var _this$props5 = _this.props;
+	      var multiple = _this$props5.multiple;
+	      var search = _this$props5.search;
+	      var allowAdditions = _this$props5.allowAdditions;
+	      var additionPosition = _this$props5.additionPosition;
+	      var additionLabel = _this$props5.additionLabel;
+	      var options = _this$props5.options;
 	      var _this$state2 = _this.state;
 	      var searchQuery = _this$state2.searchQuery;
 	      var value = _this$state2.value;
@@ -42580,6 +42662,15 @@
 	            return re.test(opt.text);
 	          });
 	        })();
+	      }
+	
+	      // insert the "add" item
+	      if (allowAdditions && search && searchQuery && !(0, _some3.default)(filteredOptions, { text: searchQuery })) {
+	        var addItem = {
+	          text: additionLabel ? additionLabel + ' ' + searchQuery : searchQuery,
+	          value: searchQuery
+	        };
+	        if (additionPosition === 'top') filteredOptions.unshift(addItem);else filteredOptions.push(addItem);
 	      }
 	
 	      return filteredOptions;
@@ -42696,11 +42787,11 @@
 	    }, _this.toggle = function () {
 	      return _this.state.open ? _this.close() : _this.open();
 	    }, _this.renderText = function () {
-	      var _this$props4 = _this.props;
-	      var multiple = _this$props4.multiple;
-	      var placeholder = _this$props4.placeholder;
-	      var search = _this$props4.search;
-	      var text = _this$props4.text;
+	      var _this$props6 = _this.props;
+	      var multiple = _this$props6.multiple;
+	      var placeholder = _this$props6.placeholder;
+	      var search = _this$props6.search;
+	      var text = _this$props6.text;
 	      var _this$state3 = _this.state;
 	      var searchQuery = _this$state3.searchQuery;
 	      var value = _this$state3.value;
@@ -42725,10 +42816,10 @@
 	    }, _this.renderHiddenInput = function () {
 	      debug('renderHiddenInput()');
 	      var value = _this.state.value;
-	      var _this$props5 = _this.props;
-	      var multiple = _this$props5.multiple;
-	      var name = _this$props5.name;
-	      var selection = _this$props5.selection;
+	      var _this$props7 = _this.props;
+	      var multiple = _this$props7.multiple;
+	      var name = _this$props7.name;
+	      var selection = _this$props7.selection;
 	
 	      debug('name:      ' + name);
 	      debug('selection: ' + selection);
@@ -42789,9 +42880,9 @@
 	        });
 	      });
 	    }, _this.renderOptions = function () {
-	      var _this$props6 = _this.props;
-	      var multiple = _this$props6.multiple;
-	      var search = _this$props6.search;
+	      var _this$props8 = _this.props;
+	      var multiple = _this$props8.multiple;
+	      var search = _this$props8.search;
 	      var _this$state5 = _this.state;
 	      var selectedIndex = _this$state5.selectedIndex;
 	      var value = _this$state5.value;
@@ -43001,7 +43092,12 @@
 	
 	      // Classes
 	
-	      var classes = (0, _classnames2.default)('ui', dropdownClasses, (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(loading, 'loading'), (0, _lib.useKeyOnly)(button, 'button'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(floating, 'floating'), (0, _lib.useKeyOnly)(inline, 'inline'), (0, _lib.useKeyOnly)(icon, 'icon'), (0, _lib.useKeyOnly)(labeled, 'labeled'),
+	      var classes = (0, _classnames2.default)('ui', dropdownClasses, (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(loading, 'loading'), (0, _lib.useKeyOnly)(button, 'button'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(floating, 'floating'), (0, _lib.useKeyOnly)(inline, 'inline'),
+	      // TODO: consider augmentation to render Dropdowns as Button/Menu, solves icon/link item issues
+	      // https://github.com/TechnologyAdvice/stardust/issues/401#issuecomment-240487229
+	      // TODO: the icon class is only required when a dropdown is a button
+	      // useKeyOnly(icon, 'icon'),
+	      (0, _lib.useKeyOnly)(labeled, 'labeled'),
 	      // TODO: linkItem is required only when Menu child, add dynamically
 	      (0, _lib.useKeyOnly)(linkItem, 'link item'), (0, _lib.useKeyOnly)(multiple, 'multiple'), (0, _lib.useKeyOnly)(search, 'search'), (0, _lib.useKeyOnly)(selection, 'selection'), (0, _lib.useKeyOnly)(simple, 'simple'), (0, _lib.useKeyOnly)(scrolling, 'scrolling'), (0, _lib.useKeyOrValueAndKey)(pointing, 'pointing'), className, 'dropdown');
 	
@@ -43026,7 +43122,7 @@
 	        this.renderSearchInput(),
 	        this.renderSearchSizer(),
 	        this.renderText(),
-	        _react2.default.createElement(_elements.Icon, { name: 'dropdown' }),
+	        (0, _factories.createIcon)(icon),
 	        this.renderMenu()
 	      );
 	    }
@@ -43040,7 +43136,7 @@
 	  // Behavior
 	  // ------------------------------------
 	  /** Add an icon by name or as a component. */
-	  icon: _react.PropTypes.oneOf([_react.PropTypes.element, _react.PropTypes.string]),
+	  icon: _react.PropTypes.oneOfType([_react.PropTypes.element, _react.PropTypes.string]),
 	
 	  /** Array of `{ text: '', value: '' }` options */
 	  options: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _lib.customPropTypes.demand(['selection']), _react.PropTypes.arrayOf(_react.PropTypes.shape({
@@ -43068,6 +43164,21 @@
 	
 	  /** Name of the hidden input which holds the value. */
 	  name: _react.PropTypes.string,
+	
+	  /**
+	   * Allow user additions to the list of options (boolean).
+	   * Requires the use of `selection`, `options` and `search`.
+	   */
+	  allowAdditions: _lib.customPropTypes.every([_lib.customPropTypes.demand(['options', 'selection', 'search']), _react.PropTypes.bool]),
+	
+	  /** Called with the new value added by the user. Use this to update the options list. */
+	  onAddItem: _react.PropTypes.func,
+	
+	  /** Position of the `Add: ...` option in the dropdown list ('top' or 'bottom'). */
+	  additionPosition: _react.PropTypes.oneOf(_meta.props.additionPosition),
+	
+	  /** Label prefixed to an option added by a user. */
+	  additionLabel: _react.PropTypes.string,
 	
 	  // ------------------------------------
 	  // Callbacks
@@ -43134,6 +43245,10 @@
 	  disabled: _react.PropTypes.bool,
 	
 	  scrolling: _react.PropTypes.bool
+	};
+	Dropdown.defaultProps = {
+	  icon: 'dropdown',
+	  additionLabel: 'Add:'
 	};
 	Dropdown.autoControlledProps = ['open', 'value'];
 	Dropdown._meta = _meta;
@@ -57765,7 +57880,16 @@
 	  value: true
 	});
 	
-	var _Feed = __webpack_require__(/*! ./Feed/Feed */ 660);
+	var _Card = __webpack_require__(/*! ./Card/Card */ 660);
+	
+	Object.defineProperty(exports, 'Card', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_Card).default;
+	  }
+	});
+	
+	var _Feed = __webpack_require__(/*! ./Feed/Feed */ 666);
 	
 	Object.defineProperty(exports, 'Feed', {
 	  enumerable: true,
@@ -57774,7 +57898,7 @@
 	  }
 	});
 	
-	var _Item = __webpack_require__(/*! ./Item/Item */ 670);
+	var _Item = __webpack_require__(/*! ./Item/Item */ 676);
 	
 	Object.defineProperty(exports, 'Item', {
 	  enumerable: true,
@@ -57783,7 +57907,7 @@
 	  }
 	});
 	
-	var _Statistic = __webpack_require__(/*! ./Statistic/Statistic */ 672);
+	var _Statistic = __webpack_require__(/*! ./Statistic/Statistic */ 678);
 	
 	Object.defineProperty(exports, 'Statistic', {
 	  enumerable: true,
@@ -57796,6 +57920,525 @@
 
 /***/ },
 /* 660 */
+/*!********************************************!*\
+  !*** ./~/stardust/dist/views/Card/Card.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 283);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 284);
+	
+	var _factories = __webpack_require__(/*! ../../factories */ 567);
+	
+	var _CardContent = __webpack_require__(/*! ./CardContent */ 661);
+	
+	var _CardContent2 = _interopRequireDefault(_CardContent);
+	
+	var _CardDescription = __webpack_require__(/*! ./CardDescription */ 662);
+	
+	var _CardDescription2 = _interopRequireDefault(_CardDescription);
+	
+	var _CardGroup = __webpack_require__(/*! ./CardGroup */ 665);
+	
+	var _CardGroup2 = _interopRequireDefault(_CardGroup);
+	
+	var _CardHeader = __webpack_require__(/*! ./CardHeader */ 663);
+	
+	var _CardHeader2 = _interopRequireDefault(_CardHeader);
+	
+	var _CardMeta = __webpack_require__(/*! ./CardMeta */ 664);
+	
+	var _CardMeta2 = _interopRequireDefault(_CardMeta);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function Card(props) {
+	  var centered = props.centered;
+	  var children = props.children;
+	  var className = props.className;
+	  var color = props.color;
+	  var description = props.description;
+	  var extra = props.extra;
+	  var fluid = props.fluid;
+	  var header = props.header;
+	  var href = props.href;
+	  var image = props.image;
+	  var meta = props.meta;
+	  var onClick = props.onClick;
+	  var raised = props.raised;
+	
+	
+	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(centered, 'centered'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(raised, 'raised'), color, 'card', className);
+	  var rest = (0, _lib.getUnhandledProps)(Card, props);
+	
+	  var handleClick = function handleClick(e) {
+	    if (onClick) onClick(e);
+	  };
+	  var CardComponent = href || onClick ? 'a' : 'div';
+	
+	  if (children) {
+	    return _react2.default.createElement(
+	      CardComponent,
+	      _extends({}, rest, { className: classes, href: href, onClick: handleClick }),
+	      children
+	    );
+	  }
+	
+	  return _react2.default.createElement(
+	    CardComponent,
+	    _extends({}, rest, { className: classes, href: href, onClick: handleClick }),
+	    (0, _factories.createImage)(image),
+	    (description || header || meta) && _react2.default.createElement(_CardContent2.default, { description: description, header: header, meta: meta }),
+	    extra && _react2.default.createElement(
+	      _CardContent2.default,
+	      { extra: true },
+	      extra
+	    )
+	  );
+	}
+	
+	Card._meta = {
+	  name: 'Card',
+	  type: _lib.META.TYPES.VIEW,
+	  props: {
+	    color: _lib.SUI.COLORS
+	  }
+	};
+	
+	Card.propTypes = {
+	  /** A Card can center itself inside its container. */
+	  centered: _react.PropTypes.bool,
+	
+	  /** Primary content of the Card. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['description', 'header', 'image', 'meta']), _react.PropTypes.node]),
+	
+	  /** Classes that will be added to the Card className. */
+	  className: _react.PropTypes.string,
+	
+	  /** A Card can be formatted to display different colors. */
+	  color: _react.PropTypes.oneOf(Card._meta.props.color),
+	
+	  /** Shorthand prop for CardDescription. Mutually exclusive with children. */
+	  description: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.node]),
+	
+	  /** Shorthand prop for CardContent containing extra prop. Mutually exclusive with children. */
+	  extra: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.node]),
+	
+	  /** A Card can be formatted to take up the width of its container. */
+	  fluid: _react.PropTypes.bool,
+	
+	  /** Shorthand prop for CardHeader. Mutually exclusive with children. */
+	  header: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.node]),
+	
+	  /** Render as an `a` tag instead of a `div` and adds the href attribute. */
+	  href: _react.PropTypes.string,
+	
+	  /** A card can contain an Image component. */
+	  image: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.node]),
+	
+	  /** Shorthand prop for CardMeta. Mutually exclusive with children. */
+	  meta: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.node]),
+	
+	  /** Render as an `a` tag instead of a `div` and called with event on Card click. */
+	  onClick: _react.PropTypes.func,
+	
+	  /** A Card can be formatted to raise above the page. */
+	  raised: _react.PropTypes.bool
+	};
+	
+	Card.Content = _CardContent2.default;
+	Card.Description = _CardDescription2.default;
+	Card.Group = _CardGroup2.default;
+	Card.Header = _CardHeader2.default;
+	Card.Meta = _CardMeta2.default;
+	
+	exports.default = Card;
+
+/***/ },
+/* 661 */
+/*!***************************************************!*\
+  !*** ./~/stardust/dist/views/Card/CardContent.js ***!
+  \***************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 283);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 284);
+	
+	var _CardDescription = __webpack_require__(/*! ./CardDescription */ 662);
+	
+	var _CardDescription2 = _interopRequireDefault(_CardDescription);
+	
+	var _CardHeader = __webpack_require__(/*! ./CardHeader */ 663);
+	
+	var _CardHeader2 = _interopRequireDefault(_CardHeader);
+	
+	var _CardMeta = __webpack_require__(/*! ./CardMeta */ 664);
+	
+	var _CardMeta2 = _interopRequireDefault(_CardMeta);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function CardContent(props) {
+	  var className = props.className;
+	  var children = props.children;
+	  var description = props.description;
+	  var extra = props.extra;
+	  var header = props.header;
+	  var meta = props.meta;
+	
+	  var classes = (0, _classnames2.default)(className, (0, _lib.useKeyOnly)(extra, 'extra'), 'content');
+	  var rest = (0, _lib.getUnhandledProps)(CardContent, props);
+	
+	  if (children) {
+	    return _react2.default.createElement(
+	      'div',
+	      _extends({}, rest, { className: classes }),
+	      children
+	    );
+	  }
+	
+	  return _react2.default.createElement(
+	    'div',
+	    _extends({}, rest, { className: classes }),
+	    header && _react2.default.createElement(_CardHeader2.default, { content: header }),
+	    meta && _react2.default.createElement(_CardMeta2.default, { content: meta }),
+	    description && _react2.default.createElement(_CardDescription2.default, { content: description })
+	  );
+	}
+	
+	CardContent._meta = {
+	  name: 'CardContent',
+	  parent: 'Card',
+	  type: _lib.META.TYPES.VIEW
+	};
+	
+	CardContent.propTypes = {
+	  /** Primary content of the CardContent. Mutually exclusive with all shorthand props. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['description', 'header', 'meta']), _react.PropTypes.node]),
+	
+	  /** Classes that will be added to the CardContent className */
+	  className: _react.PropTypes.string,
+	
+	  /** Shorthand prop for CardDescription. Mutually exclusive with children. */
+	  description: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])]),
+	
+	  /** A card can contain extra content meant to be formatted separately from the main content */
+	  extra: _react.PropTypes.bool,
+	
+	  /** Shorthand prop for CardHeader. Mutually exclusive with children. */
+	  header: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])]),
+	
+	  /** Shorthand prop for CardMeta. Mutually exclusive with children. */
+	  meta: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])])
+	};
+	
+	exports.default = CardContent;
+
+/***/ },
+/* 662 */
+/*!*******************************************************!*\
+  !*** ./~/stardust/dist/views/Card/CardDescription.js ***!
+  \*******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 283);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 284);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function CardDescription(props) {
+	  var className = props.className;
+	  var children = props.children;
+	  var content = props.content;
+	
+	  var classes = (0, _classnames2.default)(className, 'description');
+	  var rest = (0, _lib.getUnhandledProps)(CardDescription, props);
+	
+	  return _react2.default.createElement(
+	    'div',
+	    _extends({}, rest, { className: classes }),
+	    children || content
+	  );
+	}
+	
+	CardDescription._meta = {
+	  name: 'CardDescription',
+	  parent: 'Card',
+	  type: _lib.META.TYPES.VIEW
+	};
+	
+	CardDescription.propTypes = {
+	  /** Primary content of the CardDescription. Mutually exclusive with content. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['content']), _react.PropTypes.node]),
+	
+	  /** Classes that will be added to the CardDescription className. */
+	  className: _react.PropTypes.string,
+	
+	  /** Primary content of the CardDescription. Mutually exclusive with children. */
+	  content: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])])
+	};
+	
+	exports.default = CardDescription;
+
+/***/ },
+/* 663 */
+/*!**************************************************!*\
+  !*** ./~/stardust/dist/views/Card/CardHeader.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 283);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 284);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function CardHeader(props) {
+	  var className = props.className;
+	  var children = props.children;
+	  var content = props.content;
+	
+	  var classes = (0, _classnames2.default)(className, 'header');
+	  var rest = (0, _lib.getUnhandledProps)(CardHeader, props);
+	
+	  return _react2.default.createElement(
+	    'div',
+	    _extends({}, rest, { className: classes }),
+	    children || content
+	  );
+	}
+	
+	CardHeader._meta = {
+	  name: 'CardHeader',
+	  parent: 'Card',
+	  type: _lib.META.TYPES.VIEW
+	};
+	
+	CardHeader.propTypes = {
+	  /** Primary content of the CardHeader. Mutually exclusive with content. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['content']), _react.PropTypes.node]),
+	
+	  /** Classes that will be added to the CardHeader className */
+	  className: _react.PropTypes.string,
+	
+	  /** Primary content of the CardHeader. Mutually exclusive with children. */
+	  content: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])])
+	};
+	
+	exports.default = CardHeader;
+
+/***/ },
+/* 664 */
+/*!************************************************!*\
+  !*** ./~/stardust/dist/views/Card/CardMeta.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 283);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 284);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function CardMeta(props) {
+	  var className = props.className;
+	  var children = props.children;
+	  var content = props.content;
+	
+	  var classes = (0, _classnames2.default)(className, 'meta');
+	  var rest = (0, _lib.getUnhandledProps)(CardMeta, props);
+	
+	  return _react2.default.createElement(
+	    'div',
+	    _extends({}, rest, { className: classes }),
+	    children || content
+	  );
+	}
+	
+	CardMeta._meta = {
+	  name: 'CardMeta',
+	  parent: 'Card',
+	  type: _lib.META.TYPES.VIEW
+	};
+	
+	CardMeta.propTypes = {
+	  /** Primary content of the CardMeta. Mutually exclusive with content. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['content']), _react.PropTypes.node]),
+	
+	  /** Classes that will be added to the CardMeta className */
+	  className: _react.PropTypes.string,
+	
+	  /** Primary content of the CardMeta. Mutually exclusive with children. */
+	  content: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number])])
+	};
+	
+	exports.default = CardMeta;
+
+/***/ },
+/* 665 */
+/*!*************************************************!*\
+  !*** ./~/stardust/dist/views/Card/CardGroup.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 283);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 284);
+	
+	var _Card = __webpack_require__(/*! ./Card */ 660);
+	
+	var _Card2 = _interopRequireDefault(_Card);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function CardGroup(props) {
+	  var className = props.className;
+	  var children = props.children;
+	  var doubling = props.doubling;
+	  var items = props.items;
+	  var itemsPerRow = props.itemsPerRow;
+	  var stackable = props.stackable;
+	
+	  var classes = (0, _classnames2.default)('ui', (0, _lib.numberToWord)(itemsPerRow), (0, _lib.useKeyOnly)(doubling, 'doubling'), (0, _lib.useKeyOnly)(stackable, 'stackable'), className, 'cards');
+	  var rest = (0, _lib.getUnhandledProps)(CardGroup, props);
+	
+	  var content = !items ? children : items.map(function (item) {
+	    var key = item.key || [item.header, item.description].join('-');
+	    return _react2.default.createElement(_Card2.default, _extends({ key: key }, item));
+	  });
+	
+	  return _react2.default.createElement(
+	    'div',
+	    _extends({}, rest, { className: classes }),
+	    content
+	  );
+	}
+	
+	CardGroup._meta = {
+	  name: 'CardGroup',
+	  parent: 'Card',
+	  props: {
+	    itemsPerRow: _lib.SUI.WIDTHS
+	  },
+	  type: _lib.META.TYPES.VIEW
+	};
+	
+	CardGroup.propTypes = {
+	  /** A group of Card components. Mutually exclusive with items. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['items']), _react.PropTypes.node]),
+	
+	  /** Classes that will be added to the CardGroup className */
+	  className: _react.PropTypes.string,
+	
+	  /** A group of cards can double its column width for mobile */
+	  doubling: _react.PropTypes.bool,
+	
+	  /** Shorthand prop for children. Mutually exclusive with children. */
+	  items: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.arrayOf(_react.PropTypes.shape({
+	    description: _react.PropTypes.node,
+	    meta: _react.PropTypes.node,
+	    key: _react.PropTypes.string,
+	    header: _react.PropTypes.node
+	  }))]),
+	
+	  /** A group of cards can set how many cards should exist in a row */
+	  itemsPerRow: _react.PropTypes.oneOf(CardGroup._meta.props.itemsPerRow),
+	
+	  /** A group of cards can automatically stack rows to a single columns on mobile devices */
+	  stackable: _react.PropTypes.bool
+	};
+	
+	exports.default = CardGroup;
+
+/***/ },
+/* 666 */
 /*!********************************************!*\
   !*** ./~/stardust/dist/views/Feed/Feed.js ***!
   \********************************************/
@@ -57823,39 +58466,39 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _FeedContent = __webpack_require__(/*! ./FeedContent */ 661);
+	var _FeedContent = __webpack_require__(/*! ./FeedContent */ 667);
 	
 	var _FeedContent2 = _interopRequireDefault(_FeedContent);
 	
-	var _FeedDate = __webpack_require__(/*! ./FeedDate */ 662);
+	var _FeedDate = __webpack_require__(/*! ./FeedDate */ 668);
 	
 	var _FeedDate2 = _interopRequireDefault(_FeedDate);
 	
-	var _FeedEvent = __webpack_require__(/*! ./FeedEvent */ 667);
+	var _FeedEvent = __webpack_require__(/*! ./FeedEvent */ 673);
 	
 	var _FeedEvent2 = _interopRequireDefault(_FeedEvent);
 	
-	var _FeedExtra = __webpack_require__(/*! ./FeedExtra */ 663);
+	var _FeedExtra = __webpack_require__(/*! ./FeedExtra */ 669);
 	
 	var _FeedExtra2 = _interopRequireDefault(_FeedExtra);
 	
-	var _FeedLabel = __webpack_require__(/*! ./FeedLabel */ 668);
+	var _FeedLabel = __webpack_require__(/*! ./FeedLabel */ 674);
 	
 	var _FeedLabel2 = _interopRequireDefault(_FeedLabel);
 	
-	var _FeedLike = __webpack_require__(/*! ./FeedLike */ 665);
+	var _FeedLike = __webpack_require__(/*! ./FeedLike */ 671);
 	
 	var _FeedLike2 = _interopRequireDefault(_FeedLike);
 	
-	var _FeedMeta = __webpack_require__(/*! ./FeedMeta */ 664);
+	var _FeedMeta = __webpack_require__(/*! ./FeedMeta */ 670);
 	
 	var _FeedMeta2 = _interopRequireDefault(_FeedMeta);
 	
-	var _FeedSummary = __webpack_require__(/*! ./FeedSummary */ 666);
+	var _FeedSummary = __webpack_require__(/*! ./FeedSummary */ 672);
 	
 	var _FeedSummary2 = _interopRequireDefault(_FeedSummary);
 	
-	var _FeedUser = __webpack_require__(/*! ./FeedUser */ 669);
+	var _FeedUser = __webpack_require__(/*! ./FeedUser */ 675);
 	
 	var _FeedUser2 = _interopRequireDefault(_FeedUser);
 	
@@ -57949,7 +58592,7 @@
 	exports.default = Feed;
 
 /***/ },
-/* 661 */
+/* 667 */
 /*!***************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedContent.js ***!
   \***************************************************/
@@ -57973,19 +58616,19 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _FeedDate = __webpack_require__(/*! ./FeedDate */ 662);
+	var _FeedDate = __webpack_require__(/*! ./FeedDate */ 668);
 	
 	var _FeedDate2 = _interopRequireDefault(_FeedDate);
 	
-	var _FeedExtra = __webpack_require__(/*! ./FeedExtra */ 663);
+	var _FeedExtra = __webpack_require__(/*! ./FeedExtra */ 669);
 	
 	var _FeedExtra2 = _interopRequireDefault(_FeedExtra);
 	
-	var _FeedMeta = __webpack_require__(/*! ./FeedMeta */ 664);
+	var _FeedMeta = __webpack_require__(/*! ./FeedMeta */ 670);
 	
 	var _FeedMeta2 = _interopRequireDefault(_FeedMeta);
 	
-	var _FeedSummary = __webpack_require__(/*! ./FeedSummary */ 666);
+	var _FeedSummary = __webpack_require__(/*! ./FeedSummary */ 672);
 	
 	var _FeedSummary2 = _interopRequireDefault(_FeedSummary);
 	
@@ -58051,7 +58694,7 @@
 	exports.default = FeedContent;
 
 /***/ },
-/* 662 */
+/* 668 */
 /*!************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedDate.js ***!
   \************************************************/
@@ -58112,7 +58755,7 @@
 	exports.default = FeedDate;
 
 /***/ },
-/* 663 */
+/* 669 */
 /*!*************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedExtra.js ***!
   \*************************************************/
@@ -58193,7 +58836,7 @@
 	exports.default = FeedExtra;
 
 /***/ },
-/* 664 */
+/* 670 */
 /*!************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedMeta.js ***!
   \************************************************/
@@ -58217,7 +58860,7 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _FeedLike = __webpack_require__(/*! ./FeedLike */ 665);
+	var _FeedLike = __webpack_require__(/*! ./FeedLike */ 671);
 	
 	var _FeedLike2 = _interopRequireDefault(_FeedLike);
 	
@@ -58263,7 +58906,7 @@
 	exports.default = FeedMeta;
 
 /***/ },
-/* 665 */
+/* 671 */
 /*!************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedLike.js ***!
   \************************************************/
@@ -58335,7 +58978,7 @@
 	exports.default = FeedLike;
 
 /***/ },
-/* 666 */
+/* 672 */
 /*!***************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedSummary.js ***!
   \***************************************************/
@@ -58359,7 +59002,7 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _FeedDate = __webpack_require__(/*! ./FeedDate */ 662);
+	var _FeedDate = __webpack_require__(/*! ./FeedDate */ 668);
 	
 	var _FeedDate2 = _interopRequireDefault(_FeedDate);
 	
@@ -58404,7 +59047,7 @@
 	exports.default = FeedSummary;
 
 /***/ },
-/* 667 */
+/* 673 */
 /*!*************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedEvent.js ***!
   \*************************************************/
@@ -58428,11 +59071,11 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _FeedContent = __webpack_require__(/*! ./FeedContent */ 661);
+	var _FeedContent = __webpack_require__(/*! ./FeedContent */ 667);
 	
 	var _FeedContent2 = _interopRequireDefault(_FeedContent);
 	
-	var _FeedLabel = __webpack_require__(/*! ./FeedLabel */ 668);
+	var _FeedLabel = __webpack_require__(/*! ./FeedLabel */ 674);
 	
 	var _FeedLabel2 = _interopRequireDefault(_FeedLabel);
 	
@@ -58507,7 +59150,7 @@
 	exports.default = FeedEvent;
 
 /***/ },
-/* 668 */
+/* 674 */
 /*!*************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedLabel.js ***!
   \*************************************************/
@@ -58576,7 +59219,7 @@
 	exports.default = FeedLabel;
 
 /***/ },
-/* 669 */
+/* 675 */
 /*!************************************************!*\
   !*** ./~/stardust/dist/views/Feed/FeedUser.js ***!
   \************************************************/
@@ -58637,7 +59280,7 @@
 	exports.default = FeedUser;
 
 /***/ },
-/* 670 */
+/* 676 */
 /*!********************************************!*\
   !*** ./~/stardust/dist/views/Item/Item.js ***!
   \********************************************/
@@ -58667,7 +59310,7 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _ItemItems = __webpack_require__(/*! ./ItemItems */ 671);
+	var _ItemItems = __webpack_require__(/*! ./ItemItems */ 677);
 	
 	var _ItemItems2 = _interopRequireDefault(_ItemItems);
 	
@@ -58777,7 +59420,7 @@
 	exports.default = Item;
 
 /***/ },
-/* 671 */
+/* 677 */
 /*!*************************************************!*\
   !*** ./~/stardust/dist/views/Item/ItemItems.js ***!
   \*************************************************/
@@ -58834,7 +59477,7 @@
 	exports.default = ItemItems;
 
 /***/ },
-/* 672 */
+/* 678 */
 /*!******************************************************!*\
   !*** ./~/stardust/dist/views/Statistic/Statistic.js ***!
   \******************************************************/
@@ -58862,15 +59505,15 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _StatisticGroup = __webpack_require__(/*! ./StatisticGroup */ 673);
+	var _StatisticGroup = __webpack_require__(/*! ./StatisticGroup */ 679);
 	
 	var _StatisticGroup2 = _interopRequireDefault(_StatisticGroup);
 	
-	var _StatisticLabel = __webpack_require__(/*! ./StatisticLabel */ 674);
+	var _StatisticLabel = __webpack_require__(/*! ./StatisticLabel */ 680);
 	
 	var _StatisticLabel2 = _interopRequireDefault(_StatisticLabel);
 	
-	var _StatisticValue = __webpack_require__(/*! ./StatisticValue */ 675);
+	var _StatisticValue = __webpack_require__(/*! ./StatisticValue */ 681);
 	
 	var _StatisticValue2 = _interopRequireDefault(_StatisticValue);
 	
@@ -58956,7 +59599,7 @@
 	exports.default = Statistic;
 
 /***/ },
-/* 673 */
+/* 679 */
 /*!***********************************************************!*\
   !*** ./~/stardust/dist/views/Statistic/StatisticGroup.js ***!
   \***********************************************************/
@@ -58980,7 +59623,7 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 284);
 	
-	var _Statistic = __webpack_require__(/*! ./Statistic */ 672);
+	var _Statistic = __webpack_require__(/*! ./Statistic */ 678);
 	
 	var _Statistic2 = _interopRequireDefault(_Statistic);
 	
@@ -59051,7 +59694,7 @@
 	exports.default = StatisticGroup;
 
 /***/ },
-/* 674 */
+/* 680 */
 /*!***********************************************************!*\
   !*** ./~/stardust/dist/views/Statistic/StatisticLabel.js ***!
   \***********************************************************/
@@ -59112,7 +59755,7 @@
 	exports.default = StatisticLabel;
 
 /***/ },
-/* 675 */
+/* 681 */
 /*!***********************************************************!*\
   !*** ./~/stardust/dist/views/Statistic/StatisticValue.js ***!
   \***********************************************************/
@@ -59177,7 +59820,7 @@
 	exports.default = StatisticValue;
 
 /***/ },
-/* 676 */
+/* 682 */
 /*!*************************************************!*\
   !*** ./~/stardust/dist/deprecatedComponents.js ***!
   \*************************************************/
@@ -59208,7 +59851,7 @@
 	
 	var _Table2 = _interopRequireDefault(_Table);
 	
-	var _Buttons2 = __webpack_require__(/*! ./elements/Button/Buttons */ 677);
+	var _Buttons2 = __webpack_require__(/*! ./elements/Button/Buttons */ 683);
 	
 	var _Buttons3 = _interopRequireDefault(_Buttons2);
 	
@@ -59220,7 +59863,7 @@
 	
 	var _Modal2 = _interopRequireDefault(_Modal);
 	
-	var _Item = __webpack_require__(/*! ./views/Item/Item */ 670);
+	var _Item = __webpack_require__(/*! ./views/Item/Item */ 676);
 	
 	var _Item2 = _interopRequireDefault(_Item);
 	
@@ -59265,7 +59908,7 @@
 	var Items = exports.Items = (0, _lib.deprecateComponent)('Items', 'Use "Item.Items" instead.', _Item2.default.Items);
 
 /***/ },
-/* 677 */
+/* 683 */
 /*!****************************************************!*\
   !*** ./~/stardust/dist/elements/Button/Buttons.js ***!
   \****************************************************/
@@ -59335,7 +59978,7 @@
 	exports.default = Buttons;
 
 /***/ },
-/* 678 */
+/* 684 */
 /*!***************************************!*\
   !*** ./~/stardust/dist/lib/jquery.js ***!
   \***************************************/
@@ -59373,11 +60016,11 @@
 	  window.jQuery = window.$ = __webpack_require__(/*! jquery */ 629);
 	
 	  debug('Loading SUI Form plugin');
-	  __webpack_require__(/*! semantic-ui-css/components/form */ 679);
+	  __webpack_require__(/*! semantic-ui-css/components/form */ 685);
 	}
 
 /***/ },
-/* 679 */
+/* 685 */
 /*!**********************************************!*\
   !*** ./~/semantic-ui-css/components/form.js ***!
   \**********************************************/
@@ -60938,7 +61581,7 @@
 
 
 /***/ },
-/* 680 */
+/* 686 */
 /*!****************************!*\
   !*** ./~/lodash/lodash.js ***!
   \****************************/
@@ -77681,7 +78324,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../webpack/buildin/module.js */ 404)(module)))
 
 /***/ },
-/* 681 */
+/* 687 */
 /*!*************************!*\
   !*** ./app/searcher.js ***!
   \*************************/
@@ -77725,7 +78368,7 @@
 	      if (!req.name) throw 'Request needs a name!';
 	
 	      req.location = this.location = req.location || this.location;
-	      req.radius = req.radius || 5000;
+	      req.radius = req.radius || 10000;
 	      req.types = req.types && req.types.length ? req.types : ['food'];
 	
 	      this.map = this.map || new google.maps.Map(document.getElementById('map'), {

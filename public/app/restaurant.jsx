@@ -27,7 +27,8 @@ class Restaurant extends Component {
     this.searcher = new searcher();
     this.rate = this.rate.bind(this);
     this.restaurantSelected = this.restaurantSelected.bind(this);
-    this.search = this.search.bind(this);
+
+    this.search = _.debounce(this.search.bind(this), 1000);
 
     this.updateRating = this.updateRating.bind(this);
 
@@ -49,19 +50,21 @@ class Restaurant extends Component {
   }
 
   async search(event, value) {
+    if(!value) return;
     try {
       this.setState({ isFetching: true });
       const name = value;
       const data = await this.searcher
       .setLocation(this.props.loc.lat, this.props.loc.long)
       .loadLocations({name});
-      const foundRestaurants = {options: _.map(data, (v, i) => {
+      const foundRestaurants = {options: _.map(data, (v) => {
         return {
-          text: v.name,
-          value: i,
+          text: `${v.name} - ${v.vicinity}`,
+          value: `${v.name} - ${v.vicinity}`,
+          name: v.name,
           id: v.id,
           place_id: v.place_id,
-          location: v.geometry.location.toString().replace(/(\(|\))/g, '')
+          location: v.vicinity
         };
       })};
       this.setState(foundRestaurants);
@@ -84,7 +87,10 @@ class Restaurant extends Component {
 
   async rate() {
     try {
-      const rating = _.merge(this.state, this.state.options[this.state.value]);
+      const selectionData = _.filter(this.state.options, (o) => `${o.name} - ${o.location}` === this.state.value)[0];
+      if(!selectionData)
+        throw `No matching restaurant, something's screwy!`;
+      const rating = _.mergeWith({}, this.state, selectionData);
       await $.post('../api/rate', rating);
     }
     catch(x) {
@@ -109,7 +115,7 @@ class Restaurant extends Component {
             onChange={this.restaurantSelected}
             onSearchChange={this.search}
             value={value}
-            placeholder='Name of Restaurant'
+            placeholder={'Search for a Restaurant!'}
           />
         </div>
         <div className="field">
