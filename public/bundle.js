@@ -96,9 +96,12 @@
 	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(App).call(this, props));
 	
 	    _this.loc = {};
-	    navigator.geolocation.getCurrentPosition(function (position) {
-	      _this.loc.lat = position.coords.latitude;
-	      _this.loc.long = position.coords.longitude;
+	    _this.hasLoc = new Promise(function (res) {
+	      navigator.geolocation.getCurrentPosition(function (position) {
+	        _this.loc.lat = position.coords.latitude;
+	        _this.loc.long = position.coords.longitude;
+	        res();
+	      });
 	    });
 	    return _this;
 	  }
@@ -112,7 +115,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'four wide column' },
-	          _react2.default.createElement(_list2.default, { loc: this.loc })
+	          _react2.default.createElement(_list2.default, { loc: this.loc, hasLoc: this.hasLoc })
 	        )
 	      );
 	    }
@@ -78146,7 +78149,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/* globals $, ForEac */
+	/* globals $ */
 	
 	var List = function (_Component) {
 	  (0, _inherits3.default)(List, _Component);
@@ -78163,16 +78166,7 @@
 	    _this.searcher = new _searcher2.default();
 	    _this.loadRestaurants = _this.loadRestaurants.bind(_this);
 	
-	    if (!_this.props.loc.lat) {
-	      (function () {
-	        var finder = setInterval(function () {
-	          if (_this.props.loc.lat) {
-	            _this.loadRestaurants();
-	            clearInterval(finder);
-	          }
-	        }, 500);
-	      })();
-	    }
+	    props.hasLoc.then(_this.loadRestaurants);
 	    return _this;
 	  }
 	
@@ -78193,7 +78187,6 @@
 	                locations = _context.sent;
 	
 	                console.log(locations);
-	                //debugger;
 	                this.setState({ locations: locations });
 	                _context.next = 11;
 	                break;

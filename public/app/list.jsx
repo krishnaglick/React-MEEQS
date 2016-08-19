@@ -4,7 +4,7 @@ import Restaurant from './modules/restaurant.jsx';
 import searcher from './modules/searcher';
 import _ from 'lodash';
 
-/* globals $, ForEac */
+/* globals $ */
 
 class List extends Component {
 
@@ -18,14 +18,7 @@ class List extends Component {
     this.searcher = new searcher();
     this.loadRestaurants = this.loadRestaurants.bind(this);
 
-    if(!this.props.loc.lat) {
-      let finder = setInterval(() => {
-        if(this.props.loc.lat) {
-          this.loadRestaurants();
-          clearInterval(finder);
-        }
-      }, 500);
-    }
+    props.hasLoc.then(this.loadRestaurants);
   }
 
   async loadRestaurants() {
@@ -34,7 +27,6 @@ class List extends Component {
       .setLocation(this.props.loc.lat, this.props.loc.long)
       .loadLocations();
       console.log(locations);
-      //debugger;
       this.setState({locations});
     }
     catch(x) {

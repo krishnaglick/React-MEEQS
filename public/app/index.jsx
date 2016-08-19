@@ -11,9 +11,12 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.loc = {};
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.loc.lat = position.coords.latitude;
-      this.loc.long = position.coords.longitude;
+    this.hasLoc = new Promise((res) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.loc.lat = position.coords.latitude;
+        this.loc.long = position.coords.longitude;
+        res();
+      });
     });
   }
 
@@ -21,7 +24,7 @@ class App extends Component {
     return (
       <div className="ui centered grid">
         <div className="four wide column">
-          <List loc={this.loc} />
+          <List loc={this.loc} hasLoc={this.hasLoc} />
         </div>
       </div>
     );
