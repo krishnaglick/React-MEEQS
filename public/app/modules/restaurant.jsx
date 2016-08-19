@@ -26,9 +26,9 @@ class Restaurant extends Component {
   }
 
   render() {
-    const { name, location, place_id } = this.state;
+    const { name, location, place_id, rateMode } = this.state;
 
-    if(this.state.rateMode) {
+    if(rateMode) {
       return <Rater
         hasLoc={this.props.hasLoc}
         name={name}
@@ -51,7 +51,7 @@ class Restaurant extends Component {
           </Card.Content>
           <Card.Content extra>
             {(() => {
-              if(this.state.location) {
+              if(location) {
                 return (
                   <Button onClick={this.rate}>
                     Rate

@@ -17,6 +17,7 @@ class Rater extends Component {
       quality: props.quality || 0,
       service: props.service || 0,
       isFetching: false,
+      location: '',
       options: props.options ? _.isArray(props.options) ? props.options : [props.options] : [],
 
       text: props.name ? `${props.name} - ${props.location}` : '',
@@ -26,6 +27,7 @@ class Rater extends Component {
 
     this.props.hasLoc.then((location) => {
       this.searcher = new searcher(location);
+      this.setState({ location });
     });
 
     this.rate = this.rate.bind(this);
@@ -67,7 +69,7 @@ class Rater extends Component {
           name: v.name,
           id: v.id,
           place_id: v.place_id,
-          location: v.vicinity || v.location
+          vicinity: v.vicinity || v.location
         };
       })};
       this.setState(foundRestaurants);
@@ -90,14 +92,18 @@ class Rater extends Component {
 
   async rate() {
     try {
-      const selectionData = _.filter(this.state.options, (o) => `${o.name} - ${o.location || o.vicinity}` === this.state.value)[0];
+      const selectionData = _.filter(this.state.options, (o) => `${o.name} - ${o.vicinity || o.vicinity}` === this.state.value)[0];
       if(!selectionData)
         throw `No matching restaurant, something's screwy!`;
       const rating = _.mergeWith({}, this.state, selectionData);
+      delete rating.options;
+      delete rating.photos;
+      delete rating.html_attributions;
+      delete rating.geometry;
       await $.post('../api/rate', rating);
     }
     catch(x) {
-      console.log('bad!', x);
+      console.log('Issue rating a restaurant!', x);
     }
   }
 

@@ -16,7 +16,7 @@ exports.action = {
   inputs: {
     place_id: { required: true },
     name: { required: true },
-    location: { required: true },
+    vicinity: { required: true },
     menu: { required: true },
     efficiency: { required: true },
     environment: { required: true },
@@ -41,10 +41,10 @@ exports.action = {
           \${uuid},
           \${place_id},
           \${name},
-          \${location}
+          \${vicinity}
         )
         ON CONFLICT (google_id) DO UPDATE
-        SET location = \${location}, name = \${name};
+        SET location = \${vicinity}, name = \${name};
 
         INSERT INTO ratings(restaurant_id, menu, efficiency, environment, quality, service)
         VALUES (

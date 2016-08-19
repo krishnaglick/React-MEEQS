@@ -78206,10 +78206,6 @@
 	
 	var _restaurant2 = _interopRequireDefault(_restaurant);
 	
-	var _rater = __webpack_require__(/*! ./modules/rater.jsx */ 693);
-	
-	var _rater2 = _interopRequireDefault(_rater);
-	
 	var _searcher = __webpack_require__(/*! ./modules/searcher */ 688);
 	
 	var _searcher2 = _interopRequireDefault(_searcher);
@@ -78396,9 +78392,10 @@
 	      var name = _state.name;
 	      var location = _state.location;
 	      var place_id = _state.place_id;
+	      var rateMode = _state.rateMode;
 	
 	
-	      if (this.state.rateMode) {
+	      if (rateMode) {
 	        return _react2.default.createElement(_rater2.default, {
 	          hasLoc: this.props.hasLoc,
 	          name: name,
@@ -78429,7 +78426,7 @@
 	            _stardust.Card.Content,
 	            { extra: true },
 	            function () {
-	              if (_this2.state.location) {
+	              if (location) {
 	                return _react2.default.createElement(
 	                  _stardust.Button,
 	                  { onClick: _this2.rate },
@@ -78517,6 +78514,7 @@
 	      quality: props.quality || 0,
 	      service: props.service || 0,
 	      isFetching: false,
+	      location: '',
 	      options: props.options ? _lodash2.default.isArray(props.options) ? props.options : [props.options] : [],
 	
 	      text: props.name ? props.name + ' - ' + props.location : '',
@@ -78526,6 +78524,7 @@
 	
 	    _this.props.hasLoc.then(function (location) {
 	      _this.searcher = new _searcher2.default(location);
+	      _this.setState({ location: location });
 	    });
 	
 	    _this.rate = _this.rate.bind(_this);
@@ -78597,7 +78596,7 @@
 	                      name: v.name,
 	                      id: v.id,
 	                      place_id: v.place_id,
-	                      location: v.vicinity || v.location
+	                      vicinity: v.vicinity || v.location
 	                    };
 	                  }) };
 	
@@ -78653,7 +78652,7 @@
 	              case 0:
 	                _context2.prev = 0;
 	                selectionData = _lodash2.default.filter(this.state.options, function (o) {
-	                  return o.name + ' - ' + (o.location || o.vicinity) === _this2.state.value;
+	                  return o.name + ' - ' + (o.vicinity || o.vicinity) === _this2.state.value;
 	                })[0];
 	
 	                if (selectionData) {
@@ -78665,25 +78664,30 @@
 	
 	              case 4:
 	                rating = _lodash2.default.mergeWith({}, this.state, selectionData);
-	                _context2.next = 7;
+	
+	                delete rating.options;
+	                delete rating.photos;
+	                delete rating.html_attributions;
+	                delete rating.geometry;
+	                _context2.next = 11;
 	                return $.post('../api/rate', rating);
 	
-	              case 7:
-	                _context2.next = 12;
+	              case 11:
+	                _context2.next = 16;
 	                break;
 	
-	              case 9:
-	                _context2.prev = 9;
+	              case 13:
+	                _context2.prev = 13;
 	                _context2.t0 = _context2['catch'](0);
 	
-	                console.log('bad!', _context2.t0);
+	                console.log('Issue rating a restaurant!', _context2.t0);
 	
-	              case 12:
+	              case 16:
 	              case 'end':
 	                return _context2.stop();
 	            }
 	          }
-	        }, _callee2, this, [[0, 9]]);
+	        }, _callee2, this, [[0, 13]]);
 	      }));
 	
 	      function rate() {

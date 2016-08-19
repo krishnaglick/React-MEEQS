@@ -1,8 +1,8 @@
 {
-  "author": "YOU <YOU@example.com>",
-  "name": "my_actionhero_project",
-  "description": "my actionhero project",
-  "version": "0.0.1",
+  "author": "Krishna Glick <krishnaglick@gmail.com>",
+  "name": "MEEQS",
+  "description": "Restaurant rating app written in React and ActionHero",
+  "version": "0.2.1",
   "engines": {
     "node": ">=0.10.0"
   },

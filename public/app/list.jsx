@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react';
 import Restaurant from './modules/restaurant.jsx';
-import Rater from './modules/rater.jsx';
 
 import searcher from './modules/searcher';
 import _ from 'lodash';
