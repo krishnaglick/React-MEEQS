@@ -30,6 +30,7 @@ class Restaurant extends Component {
 
     if(this.state.rateMode) {
       return <Rater
+        hasLoc={this.props.hasLoc}
         name={name}
         location={location}
         place_id={place_id}

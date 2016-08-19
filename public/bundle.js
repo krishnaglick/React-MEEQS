@@ -78287,6 +78287,8 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      var locations = this.state.locations;
 	
 	
@@ -78300,7 +78302,7 @@
 	            return _react2.default.createElement(
 	              'div',
 	              { className: 'field', key: location.id },
-	              _react2.default.createElement(_restaurant2.default, { location: location })
+	              _react2.default.createElement(_restaurant2.default, { hasLoc: _this2.props.hasLoc, location: location })
 	            );
 	          })
 	        ),
@@ -78398,6 +78400,7 @@
 	
 	      if (this.state.rateMode) {
 	        return _react2.default.createElement(_rater2.default, {
+	          hasLoc: this.props.hasLoc,
 	          name: name,
 	          location: location,
 	          place_id: place_id,

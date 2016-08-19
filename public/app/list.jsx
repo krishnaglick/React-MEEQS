@@ -47,7 +47,7 @@ class List extends Component {
           {_.map(locations, (location) => {
             return (
               <div className="field" key={location.id}>
-                <Restaurant location={location} />
+                <Restaurant hasLoc={this.props.hasLoc} location={location} />
               </div>
             );
           })
