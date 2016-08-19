@@ -17,7 +17,8 @@ class Searcher {
 
     req.location = this.location = req.location || this.location;
     req.radius = req.radius || 10000;
-    req.types = req.types && req.types.length ? req.types : ['food', 'restaurant'];
+    req.type = req.type || 'restaurant';
+    req.name = `${req.name || ''} -lodging`;
 
     this.map = this.map || new google.maps.Map(document.getElementById('map'), {
       center: this.location,

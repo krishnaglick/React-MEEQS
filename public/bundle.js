@@ -75,10 +75,6 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 117);
 	
-	var _rater = __webpack_require__(/*! ./rater.jsx */ 691);
-	
-	var _rater2 = _interopRequireDefault(_rater);
-	
 	var _list = __webpack_require__(/*! ./list.jsx */ 690);
 	
 	var _list2 = _interopRequireDefault(_list);
@@ -114,7 +110,7 @@
 	        { className: 'ui centered grid' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'four wide column' },
+	          { className: 'six wide column' },
 	          _react2.default.createElement(_list2.default, { loc: this.loc, hasLoc: this.hasLoc })
 	        )
 	      );
@@ -78070,7 +78066,8 @@
 	
 	      req.location = this.location = req.location || this.location;
 	      req.radius = req.radius || 10000;
-	      req.types = req.types && req.types.length ? req.types : ['food', 'restaurant'];
+	      req.type = req.type || 'restaurant';
+	      req.name = (req.name || '') + ' -lodging';
 	
 	      this.map = this.map || new google.maps.Map(document.getElementById('map'), {
 	        center: this.location,
@@ -78160,7 +78157,7 @@
 	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(List).call(this, props));
 	
 	    _this.state = {
-	      locations: []
+	      locations: [{ name: 'Loading nearby restaurants!', id: 'temp' }]
 	    };
 	
 	    _this.searcher = new _searcher2.default();
@@ -78226,7 +78223,8 @@
 	            { className: 'field', key: location.id },
 	            _react2.default.createElement(_restaurant2.default, { location: location })
 	          );
-	        })
+	        }),
+	        _react2.default.createElement('img', { src: './assets/images/google.png' })
 	      );
 	    }
 	  }]);
@@ -78236,10 +78234,142 @@
 	exports.default = List;
 
 /***/ },
-/* 691 */
-/*!***********************!*\
-  !*** ./app/rater.jsx ***!
-  \***********************/
+/* 691 */,
+/* 692 */
+/*!************************************!*\
+  !*** ./app/modules/restaurant.jsx ***!
+  \************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 1);
+	
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+	
+	var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 2);
+	
+	var _createClass3 = _interopRequireDefault(_createClass2);
+	
+	var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 21);
+	
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+	
+	var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 75);
+	
+	var _inherits3 = _interopRequireDefault(_inherits2);
+	
+	var _react = __webpack_require__(/*! react */ 83);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _stardust = __webpack_require__(/*! stardust */ 278);
+	
+	var _rater = __webpack_require__(/*! ./rater.jsx */ 693);
+	
+	var _rater2 = _interopRequireDefault(_rater);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Restaurant = function (_Component) {
+	  (0, _inherits3.default)(Restaurant, _Component);
+	
+	  function Restaurant(props) {
+	    (0, _classCallCheck3.default)(this, Restaurant);
+	
+	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(Restaurant).call(this, props));
+	
+	    _this.state = {
+	      location: props.location.vicinity,
+	      name: props.location.name,
+	      place_id: props.location.place_id,
+	      rateMode: false
+	    };
+	
+	    _this.rate = _this.rate.bind(_this);
+	    _this.cancel = _this.cancel.bind(_this);
+	    return _this;
+	  }
+	
+	  (0, _createClass3.default)(Restaurant, [{
+	    key: 'rate',
+	    value: function rate() {
+	      this.setState({ rateMode: true });
+	    }
+	  }, {
+	    key: 'cancel',
+	    value: function cancel() {
+	      this.setState({ rateMode: false });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      var _state = this.state;
+	      var name = _state.name;
+	      var location = _state.location;
+	      var place_id = _state.place_id;
+	
+	
+	      if (this.state.rateMode) {
+	        return _react2.default.createElement(_rater2.default, {
+	          name: name,
+	          location: location,
+	          vicinity: location,
+	          place_id: place_id,
+	          cancel: this.cancel,
+	          options: this.props.location
+	        });
+	      } else {
+	        return _react2.default.createElement(
+	          _stardust.Card,
+	          null,
+	          _react2.default.createElement(
+	            _stardust.Card.Content,
+	            null,
+	            _react2.default.createElement(
+	              _stardust.Card.Header,
+	              null,
+	              name
+	            ),
+	            _react2.default.createElement(
+	              _stardust.Card.Meta,
+	              null,
+	              location
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _stardust.Card.Content,
+	            { extra: true },
+	            function () {
+	              if (_this2.state.location) {
+	                return _react2.default.createElement(
+	                  _stardust.Button,
+	                  { onClick: _this2.rate },
+	                  'Rate'
+	                );
+	              }
+	            }()
+	          )
+	        );
+	      }
+	    }
+	  }]);
+	  return Restaurant;
+	}(_react.Component);
+	
+	exports.default = Restaurant;
+
+/***/ },
+/* 693 */
+/*!*******************************!*\
+  !*** ./app/modules/rater.jsx ***!
+  \*******************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -78282,7 +78412,7 @@
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _searcher = __webpack_require__(/*! ./modules/searcher */ 688);
+	var _searcher = __webpack_require__(/*! ./searcher */ 688);
 	
 	var _searcher2 = _interopRequireDefault(_searcher);
 	
@@ -78304,13 +78434,17 @@
 	      environment: props.environment || 0,
 	      quality: props.quality || 0,
 	      service: props.service || 0,
-	      value: props.value || '',
-	      options: [],
-	      isFetching: false
+	      isFetching: false,
+	      options: props.options ? _lodash2.default.isArray(props.options) ? props.options : [props.options] : [],
+	
+	      text: props.name ? props.name + ' - ' + props.location : '',
+	      value: props.name ? props.name + ' - ' + props.location : props.value || '',
+	      name: props.name || ''
 	    };
 	
 	    _this.searcher = new _searcher2.default();
 	    _this.rate = _this.rate.bind(_this);
+	    _this.cancel = _this.props.cancel;
 	    _this.restaurantSelected = _this.restaurantSelected.bind(_this);
 	
 	    _this.search = _lodash2.default.debounce(_this.search.bind(_this), 1000);
@@ -78378,7 +78512,7 @@
 	                      name: v.name,
 	                      id: v.id,
 	                      place_id: v.place_id,
-	                      location: v.vicinity
+	                      location: v.vicinity || v.location
 	                    };
 	                  }) };
 	
@@ -78434,7 +78568,7 @@
 	              case 0:
 	                _context2.prev = 0;
 	                selectionData = _lodash2.default.filter(this.state.options, function (o) {
-	                  return o.name + ' - ' + o.location === _this2.state.value;
+	                  return o.name + ' - ' + (o.location || o.vicinity) === _this2.state.value;
 	                })[0];
 	
 	                if (selectionData) {
@@ -78476,6 +78610,8 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this3 = this;
+	
 	      var _state = this.state;
 	      var options = _state.options;
 	      var isFetching = _state.isFetching;
@@ -78488,16 +78624,24 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'field' },
-	          _react2.default.createElement(_stardust.Select, {
-	            options: options,
-	            disabled: isFetching,
-	            loading: isFetching,
-	            search: true,
-	            onChange: this.restaurantSelected,
-	            onSearchChange: this.search,
-	            value: value,
-	            placeholder: 'Search for a Restaurant!'
-	          })
+	          function () {
+	            if (_this3.state.name) return _react2.default.createElement(
+	              'div',
+	              null,
+	              _this3.state.name
+	            );else {
+	              return _react2.default.createElement(_stardust.Select, {
+	                options: options,
+	                disabled: isFetching,
+	                loading: isFetching,
+	                search: true,
+	                onChange: _this3.restaurantSelected,
+	                onSearchChange: _this3.search,
+	                value: value,
+	                placeholder: 'Search for a Restaurant!'
+	              });
+	            }
+	          }()
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -78531,8 +78675,13 @@
 	        ),
 	        _react2.default.createElement(
 	          _stardust.Button,
-	          { onClick: this.rate },
+	          { onClick: this.rate, className: 'ui green button' },
 	          'Rate'
+	        ),
+	        _react2.default.createElement(
+	          _stardust.Button,
+	          { onClick: this.cancel, className: 'ui red button' },
+	          'Cancel'
 	        )
 	      );
 	    }
@@ -78541,108 +78690,6 @@
 	}(_react.Component);
 	
 	exports.default = Rater;
-
-/***/ },
-/* 692 */
-/*!************************************!*\
-  !*** ./app/modules/restaurant.jsx ***!
-  \************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _classCallCheck2 = __webpack_require__(/*! babel-runtime/helpers/classCallCheck */ 1);
-	
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-	
-	var _createClass2 = __webpack_require__(/*! babel-runtime/helpers/createClass */ 2);
-	
-	var _createClass3 = _interopRequireDefault(_createClass2);
-	
-	var _possibleConstructorReturn2 = __webpack_require__(/*! babel-runtime/helpers/possibleConstructorReturn */ 21);
-	
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-	
-	var _inherits2 = __webpack_require__(/*! babel-runtime/helpers/inherits */ 75);
-	
-	var _inherits3 = _interopRequireDefault(_inherits2);
-	
-	var _react = __webpack_require__(/*! react */ 83);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _stardust = __webpack_require__(/*! stardust */ 278);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Restaurant = function (_Component) {
-	  (0, _inherits3.default)(Restaurant, _Component);
-	
-	  function Restaurant(props) {
-	    (0, _classCallCheck3.default)(this, Restaurant);
-	
-	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(Restaurant).call(this, props));
-	
-	    _this.state = {
-	      location: props.location.vicinity,
-	      name: props.location.name,
-	      place_id: props.location.place_id
-	    };
-	
-	    _this.rate = _this.rate.bind(_this);
-	    return _this;
-	  }
-	
-	  (0, _createClass3.default)(Restaurant, [{
-	    key: 'rate',
-	    value: function rate() {
-	      //Things here
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _state = this.state;
-	      var name = _state.name;
-	      var location = _state.location;
-	
-	
-	      return _react2.default.createElement(
-	        _stardust.Card,
-	        null,
-	        _react2.default.createElement(
-	          _stardust.Card.Content,
-	          null,
-	          _react2.default.createElement(
-	            _stardust.Card.Header,
-	            null,
-	            name
-	          ),
-	          _react2.default.createElement(
-	            _stardust.Card.Meta,
-	            null,
-	            location
-	          )
-	        ),
-	        _react2.default.createElement(
-	          _stardust.Card.Content,
-	          { extra: true },
-	          _react2.default.createElement(
-	            _stardust.Button,
-	            { onClick: this.rate },
-	            'Rate'
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	  return Restaurant;
-	}(_react.Component);
-	
-	exports.default = Restaurant;
 
 /***/ }
 /******/ ]);

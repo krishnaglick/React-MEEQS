@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Button, Select, Rating } from 'stardust';
 import _ from 'lodash';
-import searcher from './modules/searcher';
+import searcher from './searcher';
 
 /* globals $ */
 
@@ -16,13 +16,18 @@ class Rater extends Component {
       environment : props.environment || 0,
       quality: props.quality || 0,
       service: props.service || 0,
-      value: props.value || '',
-      options: [],
-      isFetching: false
+      isFetching: false,
+      options: props.options ? _.isArray(props.options) ? props.options : [props.options] : [],
+
+      text: props.name ? `${props.name} - ${props.location}` : '',
+      value: props.name ? `${props.name} - ${props.location}` :  props.value || '',
+      name: props.name || ''
     };
+
 
     this.searcher = new searcher();
     this.rate = this.rate.bind(this);
+    this.cancel = this.props.cancel;
     this.restaurantSelected = this.restaurantSelected.bind(this);
 
     this.search = _.debounce(this.search.bind(this), 1000);
@@ -61,7 +66,7 @@ class Rater extends Component {
           name: v.name,
           id: v.id,
           place_id: v.place_id,
-          location: v.vicinity
+          location: v.vicinity || v.location
         };
       })};
       this.setState(foundRestaurants);
@@ -84,7 +89,7 @@ class Rater extends Component {
 
   async rate() {
     try {
-      const selectionData = _.filter(this.state.options, (o) => `${o.name} - ${o.location}` === this.state.value)[0];
+      const selectionData = _.filter(this.state.options, (o) => `${o.name} - ${o.location || o.vicinity}` === this.state.value)[0];
       if(!selectionData)
         throw `No matching restaurant, something's screwy!`;
       const rating = _.mergeWith({}, this.state, selectionData);
@@ -101,16 +106,24 @@ class Rater extends Component {
     return (
       <div className="ui form segment">
         <div className="field">
-          <Select
-            options={options}
-            disabled={isFetching}
-            loading={isFetching}
-            search={true}
-            onChange={this.restaurantSelected}
-            onSearchChange={this.search}
-            value={value}
-            placeholder={'Search for a Restaurant!'}
-          />
+          {(() => {
+            if(this.state.name)
+              return (<div>{this.state.name}</div>);
+            else {
+              return (
+                <Select
+                  options={options}
+                  disabled={isFetching}
+                  loading={isFetching}
+                  search={true}
+                  onChange={this.restaurantSelected}
+                  onSearchChange={this.search}
+                  value={value}
+                  placeholder={'Search for a Restaurant!'}
+                />
+              );
+            }
+          })()}
         </div>
         <div className="field">
           Menu: 
@@ -132,8 +145,11 @@ class Rater extends Component {
           Service: 
           <Rating icon='star'clearable={true} defaultRating={0} maxRating={4} onRate={this.rateService} />
         </div>
-        <Button onClick={this.rate}>
+        <Button onClick={this.rate} className="ui green button">
           Rate
+        </Button>
+        <Button onClick={this.cancel} className="ui red button">
+          Cancel
         </Button>
       </div>
     );

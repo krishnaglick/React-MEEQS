@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import {render} from 'react-dom';
 
-import Rater from './rater.jsx';
 import List from './list.jsx';
 
 /* globals document, navigator */
@@ -23,7 +22,7 @@ class App extends Component {
   render() {
     return (
       <div className="ui centered grid">
-        <div className="four wide column">
+        <div className="six wide column">
           <List loc={this.loc} hasLoc={this.hasLoc} />
         </div>
       </div>

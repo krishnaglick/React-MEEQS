@@ -12,7 +12,7 @@ class List extends Component {
     super(props);
 
     this.state = {
-      locations: []
+      locations: [{name: 'Loading nearby restaurants!', id: 'temp'}]
     };
 
     this.searcher = new searcher();
@@ -47,6 +47,7 @@ class List extends Component {
           );
         })
         }
+        <img src="./assets/images/google.png" />
       </div>
     );
   }
