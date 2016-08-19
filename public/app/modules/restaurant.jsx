@@ -32,7 +32,6 @@ class Restaurant extends Component {
       return <Rater
         name={name}
         location={location}
-        vicinity={location}
         place_id={place_id}
         cancel={this.cancel}
         options={this.props.location}

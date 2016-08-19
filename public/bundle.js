@@ -79,6 +79,14 @@
 	
 	var _list2 = _interopRequireDefault(_list);
 	
+	var _rater = __webpack_require__(/*! ./modules/rater.jsx */ 693);
+	
+	var _rater2 = _interopRequireDefault(_rater);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 686);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	/* globals document, navigator */
@@ -91,27 +99,78 @@
 	
 	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(App).call(this, props));
 	
+	    _this.state = {
+	      searchMode: false
+	    };
+	
+	    _this.setActiveItem = _this.setActiveItem.bind(_this);
+	    _this.searchModeOff = _this.searchModeOff.bind(_this);
+	    _this.searchModeOn = _this.searchModeOn.bind(_this);
+	
 	    _this.loc = {};
 	    _this.hasLoc = new Promise(function (res) {
 	      navigator.geolocation.getCurrentPosition(function (position) {
 	        _this.loc.lat = position.coords.latitude;
 	        _this.loc.long = position.coords.longitude;
-	        res();
+	        res(_this.loc);
 	      });
 	    });
 	    return _this;
 	  }
 	
 	  (0, _createClass3.default)(App, [{
+	    key: 'setActiveItem',
+	    value: function setActiveItem(e) {
+	      _lodash2.default.forEach(e.currentTarget.getElementsByClassName('item'), function (item) {
+	        item.className = 'item';
+	      });
+	      e.target.className = 'active item';
+	    }
+	  }, {
+	    key: 'searchModeOff',
+	    value: function searchModeOff() {
+	      this.setState({ searchMode: false });
+	    }
+	  }, {
+	    key: 'searchModeOn',
+	    value: function searchModeOn() {
+	      this.setState({ searchMode: true });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
+	      var searchMode = this.state.searchMode;
+	
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'ui centered grid' },
 	        _react2.default.createElement(
 	          'div',
+	          { className: 'three wide column' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'ui vertical menu', onClick: this.setActiveItem },
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'active item', onClick: this.searchModeOff },
+	              'List'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'item', onClick: this.searchModeOn },
+	              'Search'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
 	          { className: 'six wide column' },
-	          _react2.default.createElement(_list2.default, { loc: this.loc, hasLoc: this.hasLoc })
+	          function () {
+	            if (searchMode) return _react2.default.createElement(_rater2.default, { hasLoc: _this2.hasLoc });else return _react2.default.createElement(_list2.default, { hasLoc: _this2.hasLoc, searchMode: _this2.state.searchMode });
+	          }()
 	        )
 	      );
 	    }
@@ -78041,12 +78100,23 @@
 	
 	var Searcher = function () {
 	  function Searcher() {
+	    var location = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	    (0, _classCallCheck3.default)(this, Searcher);
+	    var lat = location.lat;
+	    var long = location.long;
+	
+	    if (lat && long) this.setLocation({ lat: lat, long: long });
 	  }
 	
 	  (0, _createClass3.default)(Searcher, [{
 	    key: 'setLocation',
-	    value: function setLocation(lat, long) {
+	    value: function setLocation(_ref) {
+	      var _ref$lat = _ref.lat;
+	      var lat = _ref$lat === undefined ? '' : _ref$lat;
+	      var _ref$long = _ref.long;
+	      var long = _ref$long === undefined ? '' : _ref$long;
+	
+	      if (!lat || !long) throw 'Need to provide latitude and longitude values!';
 	      this.location = new google.maps.LatLng(lat, long);
 	      return this;
 	    }
@@ -78136,6 +78206,10 @@
 	
 	var _restaurant2 = _interopRequireDefault(_restaurant);
 	
+	var _rater = __webpack_require__(/*! ./modules/rater.jsx */ 693);
+	
+	var _rater2 = _interopRequireDefault(_rater);
+	
 	var _searcher = __webpack_require__(/*! ./modules/searcher */ 688);
 	
 	var _searcher2 = _interopRequireDefault(_searcher);
@@ -78170,39 +78244,41 @@
 	  (0, _createClass3.default)(List, [{
 	    key: 'loadRestaurants',
 	    value: function () {
-	      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+	      var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(location) {
 	        var locations;
 	        return _regenerator2.default.wrap(function _callee$(_context) {
 	          while (1) {
 	            switch (_context.prev = _context.next) {
 	              case 0:
 	                _context.prev = 0;
-	                _context.next = 3;
-	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations();
 	
-	              case 3:
+	                location = location || this.props.loc;
+	                _context.next = 4;
+	                return this.searcher.setLocation(location).loadLocations();
+	
+	              case 4:
 	                locations = _context.sent;
 	
 	                console.log(locations);
 	                this.setState({ locations: locations });
-	                _context.next = 11;
+	                _context.next = 12;
 	                break;
 	
-	              case 8:
-	                _context.prev = 8;
+	              case 9:
+	                _context.prev = 9;
 	                _context.t0 = _context['catch'](0);
 	
 	                console.log('Error loading restaurants for list!', _context.t0);
 	
-	              case 11:
+	              case 12:
 	              case 'end':
 	                return _context.stop();
 	            }
 	          }
-	        }, _callee, this, [[0, 8]]);
+	        }, _callee, this, [[0, 9]]);
 	      }));
 	
-	      function loadRestaurants() {
+	      function loadRestaurants(_x) {
 	        return _ref.apply(this, arguments);
 	      }
 	
@@ -78216,14 +78292,18 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'ui form segment' },
-	        _lodash2.default.map(locations, function (location) {
-	          return _react2.default.createElement(
-	            'div',
-	            { className: 'field', key: location.id },
-	            _react2.default.createElement(_restaurant2.default, { location: location })
-	          );
-	        }),
+	        { className: 'ui large form segment' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'ui two stackable cards' },
+	          _lodash2.default.map(locations, function (location) {
+	            return _react2.default.createElement(
+	              'div',
+	              { className: 'field', key: location.id },
+	              _react2.default.createElement(_restaurant2.default, { location: location })
+	            );
+	          })
+	        ),
 	        _react2.default.createElement('img', { src: './assets/images/google.png' })
 	      );
 	    }
@@ -78320,7 +78400,6 @@
 	        return _react2.default.createElement(_rater2.default, {
 	          name: name,
 	          location: location,
-	          vicinity: location,
 	          place_id: place_id,
 	          cancel: this.cancel,
 	          options: this.props.location
@@ -78442,7 +78521,10 @@
 	      name: props.name || ''
 	    };
 	
-	    _this.searcher = new _searcher2.default();
+	    _this.props.hasLoc.then(function (location) {
+	      _this.searcher = new _searcher2.default(location);
+	    });
+	
 	    _this.rate = _this.rate.bind(_this);
 	    _this.cancel = _this.props.cancel;
 	    _this.restaurantSelected = _this.restaurantSelected.bind(_this);
@@ -78501,7 +78583,7 @@
 	                this.setState({ isFetching: true });
 	                name = value;
 	                _context.next = 7;
-	                return this.searcher.setLocation(this.props.loc.lat, this.props.loc.long).loadLocations({ name: name });
+	                return this.searcher.loadLocations({ name: name });
 	
 	              case 7:
 	                data = _context.sent;

@@ -24,8 +24,10 @@ class Rater extends Component {
       name: props.name || ''
     };
 
+    this.props.hasLoc.then((location) => {
+      this.searcher = new searcher(location);
+    });
 
-    this.searcher = new searcher();
     this.rate = this.rate.bind(this);
     this.cancel = this.props.cancel;
     this.restaurantSelected = this.restaurantSelected.bind(this);
@@ -57,7 +59,6 @@ class Rater extends Component {
       this.setState({ isFetching: true });
       const name = value;
       const data = await this.searcher
-      .setLocation(this.props.loc.lat, this.props.loc.long)
       .loadLocations({name});
       const foundRestaurants = {options: _.map(data, (v) => {
         return {

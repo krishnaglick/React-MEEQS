@@ -3,7 +3,15 @@
 
 class Searcher {
 
-  setLocation(lat, long) {
+  constructor(location = {}) {
+    const { lat, long } = location;
+    if(lat && long)
+      this.setLocation({lat, long});
+  }
+
+  setLocation({lat = '', long = ''}) {
+    if(!lat || !long)
+      throw 'Need to provide latitude and longitude values!';
     this.location = new google.maps.LatLng(lat, long);
     return this;
   }
