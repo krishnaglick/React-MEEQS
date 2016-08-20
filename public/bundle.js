@@ -23996,11 +23996,12 @@
 	                              _lodash2.default.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], function (key) {
 	                                meeqsRating[key] = parseInt(meeqsRating[key]);
 	                              });
+	                              location.id += 'MEEQS';
 	                            }
 	                            return _lodash2.default.merge({}, location, meeqsRating);
 	                          });
 	
-	                          _this2.setState({ locations: locations }, _this2.forceUpdate);
+	                          _this2.setState({ locations: locations });
 	
 	                        case 6:
 	                        case 'end':
@@ -25615,9 +25616,9 @@
 	    var _this = (0, _possibleConstructorReturn3.default)(this, Object.getPrototypeOf(Restaurant).call(this, props));
 	
 	    _this.state = {
-	      location: props.location.vicinity,
-	      name: props.location.name,
-	      place_id: props.location.place_id,
+	      location: props.location.vicinity || '',
+	      name: props.location.name || '',
+	      place_id: props.location.place_id || '',
 	      rateMode: false,
 	
 	      menu: props.location.menu || 0,
@@ -25626,7 +25627,6 @@
 	      quality: props.location.quality || 0,
 	      service: props.location.service || 0
 	    };
-	    console.log(_this.state);
 	
 	    _this.rate = _this.rate.bind(_this);
 	    _this.cancel = _this.cancel.bind(_this);
@@ -61878,7 +61878,7 @@
 	                _context.prev = 12;
 	                _context.t0 = _context['catch'](2);
 	
-	                console.log('Error finding google data!', _context.t0);
+	                console.error('Error finding google data!', _context.t0);
 	
 	              case 15:
 	                this.setState({ isFetching: false });
@@ -61950,7 +61950,7 @@
 	                _context2.prev = 13;
 	                _context2.t0 = _context2['catch'](0);
 	
-	                console.log('Issue rating a restaurant!', _context2.t0);
+	                console.error('Issue rating a restaurant!', _context2.t0);
 	
 	              case 16:
 	              case 'end':
@@ -78810,11 +78810,9 @@
 	
 	var _createClass3 = _interopRequireDefault(_createClass2);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 688);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* globals google, document */
 	
 	var Searcher = function () {
 	  function Searcher() {
@@ -78850,8 +78848,6 @@
 	
 	      var req = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	
-	      //if(!req.name) throw 'Request needs a name!';
-	
 	      req.location = this.location = req.location || this.location;
 	      req.radius = req.radius || 10000;
 	      req.type = req.type || 'restaurant';
@@ -78867,11 +78863,6 @@
 	          if (status !== google.maps.places.PlacesServiceStatus.OK) {
 	            rej(results);
 	          } else {
-	            results = _lodash2.default.map(results, function (result) {
-	              _lodash2.default.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], function (key) {
-	                result[key] = 0;
-	              });
-	            });
 	            res(results);
 	          }
 	        });
@@ -78880,7 +78871,6 @@
 	  }]);
 	  return Searcher;
 	}();
-	/* globals google, document */
 	
 	module.exports = Searcher;
 

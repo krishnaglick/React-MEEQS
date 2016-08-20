@@ -8,9 +8,9 @@ class Restaurant extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: props.location.vicinity,
-      name: props.location.name,
-      place_id: props.location.place_id,
+      location: props.location.vicinity || '',
+      name: props.location.name || '',
+      place_id: props.location.place_id || '',
       rateMode: false,
 
       menu: props.location.menu || 0,
@@ -19,7 +19,6 @@ class Restaurant extends Component {
       quality: props.location.quality || 0,
       service: props.location.service || 0,
     };
-    console.log(this.state);
 
     this.rate = this.rate.bind(this);
     this.cancel = this.cancel.bind(this);

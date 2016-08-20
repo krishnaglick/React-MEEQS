@@ -75,7 +75,7 @@ class Rater extends Component {
       this.setState(foundRestaurants);
     }
     catch(x) {
-      console.log('Error finding google data!', x);
+      console.error('Error finding google data!', x);
     }
     this.setState({ isFetching: false });
   }
@@ -103,7 +103,7 @@ class Rater extends Component {
       await $.post('../api/rate', rating);
     }
     catch(x) {
-      console.log('Issue rating a restaurant!', x);
+      console.error('Issue rating a restaurant!', x);
     }
   }
 

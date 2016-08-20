@@ -46,10 +46,11 @@ class List extends Component {
           _.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], (key) => {
             meeqsRating[key] = parseInt(meeqsRating[key]);
           });
+          location.id += 'MEEQS';
         }
         return _.merge({}, location, meeqsRating);
       });
-      this.setState({ locations }, this.forceUpdate);
+      this.setState({ locations });
     }
     catch(x) {
       console.error('Error loading MEEQS ratings for locations!', x);

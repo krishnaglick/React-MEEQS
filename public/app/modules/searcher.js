@@ -1,8 +1,6 @@
 
 /* globals google, document */
 
-import _ from 'lodash';
-
 class Searcher {
 
   constructor(location = {}) {
@@ -23,8 +21,6 @@ class Searcher {
   }
 
   loadLocations(req = {}) {
-    //if(!req.name) throw 'Request needs a name!';
-
     req.location = this.location = req.location || this.location;
     req.radius = req.radius || 10000;
     req.type = req.type || 'restaurant';
@@ -41,11 +37,6 @@ class Searcher {
           rej(results);
         }
         else {
-          results = _.map(results, (result) => {
-            _.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], (key) => {
-              result[key] = 0;
-            });
-          })
           res(results);
         }
       });
