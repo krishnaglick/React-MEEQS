@@ -20,7 +20,7 @@ exports.action = {
   run: async function(api, data, next) {
     try {
       const placeIDs = _.map(data.params.placeIDs.split(','), (id) => id.replace(/'/g, ''));
-      const meeqsRatings = await api.db.many(_.map(placeIDs, (placeID) => {
+      const meeqsRatings = await api.db.manyOrNone(_.map(placeIDs, (placeID) => {
         return `
           SELECT
             AVG(menu) AS menu,
