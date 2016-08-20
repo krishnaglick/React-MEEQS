@@ -2,7 +2,7 @@
   "author": "Krishna Glick <krishnaglick@gmail.com>",
   "name": "MEEQS",
   "description": "Restaurant rating app written in React and ActionHero",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "engines": {
     "node": ">=0.10.0"
   },
