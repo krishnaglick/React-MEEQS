@@ -38,9 +38,19 @@ class List extends Component {
 
   async loadMeeqsRatingsForRestaurants() {
     try {
-      const locations = _.map(this.state.locations, (loc) => loc.place_id);
-      const meeqsRatings = await $.post('../api/getRatingsForLocations', { locations: locations });
-      debugger;
+      const placeIDs = _.map(this.state.locations, (loc) => loc.place_id).join(',');
+      const meeqsRatings = await $.post('../api/getRatingsForLocations', { placeIDs });
+      const locations = _.map(this.state.locations, (location) => {
+        const meeqsRating = _.find(meeqsRatings, (rating) => rating.place_id === location.place_id);
+        if(meeqsRating) {
+          _.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], (key) => {
+            meeqsRating[key] = parseInt(meeqsRating[key]);
+          });
+        }
+        return _.merge({}, location, meeqsRating);
+      });
+      console.log(locations);
+      this.setState({ locations });
     }
     catch(x) {
       console.error('Error loading MEEQS ratings for locations!', x);
@@ -49,7 +59,6 @@ class List extends Component {
 
   render() {
     const { locations } = this.state;
-
 
     return (
       <div className="ui large form segment">

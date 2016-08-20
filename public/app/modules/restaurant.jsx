@@ -33,6 +33,7 @@ class Restaurant extends Component {
 
   render() {
     const { name, location, place_id, rateMode } = this.state;
+    const { menu, efficiency, environment, quality, service } = this.state;
 
     if(rateMode) {
       return <Rater
@@ -60,7 +61,7 @@ class Restaurant extends Component {
               if(location) {
                 return (
                   <div>
-                    Menu: {this.state.menu} | Efficiency: {this.state.efficiency} | Environment: {this.state.environment} | Quality: {this.state.quality} | Service: {this.state.service}
+                    Menu: {menu} | Efficiency: {efficiency} | Environment: {environment} | Quality: {quality} | Service: {service}
                     <Button onClick={this.rate}>
                       Rate
                     </Button>

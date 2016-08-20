@@ -30,6 +30,7 @@
   },
   "scripts": {
     "start": "node node_modules/babel-cli/bin/babel-node  --max_old_space_size=8192 --harmony ./node_modules/actionhero/bin/actionhero",
+    "debug": "node \"C:/Program Files/nodejs/node_modules/babel-node-debug/bin/bode-debug.js\" ./node_modules/actionhero/bin/actionhero",
     "cluster": "node node_modules/babel-cli/bin/babel-node  --max_old_space_size=8192 --harmony ./node_modules/actionhero/bin/actionhero start cluster --workers=1",
     "actionhero": "actionhero",
     "dbInit": "babel-node utility/dbInit.js",
