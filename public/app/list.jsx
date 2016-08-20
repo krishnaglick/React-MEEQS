@@ -28,11 +28,22 @@ class List extends Component {
       const locations = await this.searcher
       .setLocation(location)
       .loadLocations();
-      console.log(locations);
-      this.setState({locations});
+      this.setState({ locations });
+      this.loadMeeqsRatingsForRestaurants();
     }
     catch(x) {
       console.log('Error loading restaurants for list!', x);
+    }
+  }
+
+  async loadMeeqsRatingsForRestaurants() {
+    try {
+      const locations = _.map(this.state.locations, (loc) => loc.place_id);
+      const meeqsRatings = await $.post('../api/getRatingsForLocations', { locations: locations });
+      debugger;
+    }
+    catch(x) {
+      console.error('Error loading MEEQS ratings for locations!', x);
     }
   }
 

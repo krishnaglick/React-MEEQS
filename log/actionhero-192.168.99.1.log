@@ -262,3 +262,32 @@
 {"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"2\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"Chipotle Mexican Grill\",\"place_id\":\"ChIJvzy4k6h-54gRGGD0nR5p0vc\",\"action\":\"rate\",\"apiVersion\":1}","duration":0,"error":"Error: vicinity is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-19T20:54:14.370Z"}
 {"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"0\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"Chipotle Mexican Grill\",\"place_id\":\"ChIJvzy4k6h-54gRGGD0nR5p0vc\",\"vicinity\":\"4200 Conroy Road N-257, Orlando\",\"action\":\"rate\",\"apiVersion\":1,\"uuid\":\"637a55b2-72f5-4832-8507-541a04bf0068\"}","duration":81,"level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-19T20:55:43.738Z"}
 {"to":"127.0.0.1","action":"rate","params":"{\"menu\":\"0\",\"efficiency\":\"0\",\"environment\":\"0\",\"quality\":\"0\",\"service\":\"0\",\"name\":\"BJ's Restaurant & Brewhouse\",\"place_id\":\"ChIJm7yn21R-54gRiUJI0nu2caY\",\"vicinity\":\"8103 International Dr, Orlando\",\"action\":\"rate\",\"apiVersion\":1,\"uuid\":\"bfb542a7-5b3d-4b85-a65d-b7f323337883\"}","duration":3,"level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-19T20:56:04.928Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.170Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.821Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> start","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.822Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.822Z"}
+{"level":"notice","message":"pid: 10708","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.827Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.827Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-20T04:27:10.832Z"}
+{"level":"alert","message":"Shutting down open servers and stopping task processing...","timestamp":"192.168.99.1 @ 2016-08-20T04:28:06.274Z"}
+{"level":"notice","message":"*** Starting ActionHero ***","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.001Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.554Z"}
+{"level":"info","message":"ACTIONHERO COMMAND >> start","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.555Z"}
+{"level":"info","message":"--------------------------------------","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.555Z"}
+{"level":"notice","message":"pid: 880","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.561Z"}
+{"level":"notice","message":"server ID: 192.168.99.1","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.562Z"}
+{"level":"info","message":"actionhero member 192.168.99.1 has joined the cluster","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.566Z"}
+{"level":"notice","message":"Starting server: `web` @ 0.0.0.0:8082","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.571Z"}
+{"level":"notice","message":"Starting server: `websocket`","timestamp":"192.168.99.1 @ 2016-08-20T04:28:12.579Z"}
+{"level":"notice","message":"environment: development","timestamp":"192.168.99.1 @ 2016-08-20T04:28:13.402Z"}
+{"level":"notice","message":"*** ActionHero Started ***","timestamp":"192.168.99.1 @ 2016-08-20T04:28:13.406Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":0,"error":"Error: locations is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:29:13.963Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":0,"error":"Error: locations is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:30:42.991Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":91,"error":"TypeError: Empty or undefined query.","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:31:01.280Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":17,"error":"TypeError: Empty or undefined query.","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:31:17.838Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":75,"error":"TypeError: Empty or undefined query.","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:32:42.730Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":77,"error":"TypeError: Empty or undefined query.","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:33:43.486Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":0,"error":"Error: locations is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:34:38.368Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":0,"error":"Error: locations is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:35:08.318Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":1,"error":"Error: locations is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:37:09.118Z"}
+{"to":"127.0.0.1","action":"getRatingsForLocations","params":"{\"action\":\"getRatingsForLocations\",\"apiVersion\":1}","duration":0,"error":"Error: locations is a required parameter for this action","level":"info","message":"[ action @ web ]","timestamp":"192.168.99.1 @ 2016-08-20T04:37:13.198Z"}

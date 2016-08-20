@@ -78255,8 +78255,8 @@
 	              case 4:
 	                locations = _context.sent;
 	
-	                console.log(locations);
 	                this.setState({ locations: locations });
+	                this.loadMeeqsRatingsForRestaurants();
 	                _context.next = 12;
 	                break;
 	
@@ -78279,6 +78279,49 @@
 	      }
 	
 	      return loadRestaurants;
+	    }()
+	  }, {
+	    key: 'loadMeeqsRatingsForRestaurants',
+	    value: function () {
+	      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
+	        var locations, meeqsRatings;
+	        return _regenerator2.default.wrap(function _callee2$(_context2) {
+	          while (1) {
+	            switch (_context2.prev = _context2.next) {
+	              case 0:
+	                _context2.prev = 0;
+	                locations = _lodash2.default.map(this.state.locations, function (loc) {
+	                  return loc.place_id;
+	                });
+	                _context2.next = 4;
+	                return $.post('../api/getRatingsForLocations', { locations: locations });
+	
+	              case 4:
+	                meeqsRatings = _context2.sent;
+	
+	                debugger;
+	                _context2.next = 11;
+	                break;
+	
+	              case 8:
+	                _context2.prev = 8;
+	                _context2.t0 = _context2['catch'](0);
+	
+	                console.error('Error loading MEEQS ratings for locations!', _context2.t0);
+	
+	              case 11:
+	              case 'end':
+	                return _context2.stop();
+	            }
+	          }
+	        }, _callee2, this, [[0, 8]]);
+	      }));
+	
+	      function loadMeeqsRatingsForRestaurants() {
+	        return _ref2.apply(this, arguments);
+	      }
+	
+	      return loadMeeqsRatingsForRestaurants;
 	    }()
 	  }, {
 	    key: 'render',
@@ -78365,7 +78408,13 @@
 	      location: props.location.vicinity,
 	      name: props.location.name,
 	      place_id: props.location.place_id,
-	      rateMode: false
+	      rateMode: false,
+	
+	      menu: props.menu || 0,
+	      efficiency: props.efficiency || 0,
+	      environment: props.environment || 0,
+	      quality: props.quality || 0,
+	      service: props.service || 0
 	    };
 	
 	    _this.rate = _this.rate.bind(_this);
@@ -78428,9 +78477,23 @@
 	            function () {
 	              if (location) {
 	                return _react2.default.createElement(
-	                  _stardust.Button,
-	                  { onClick: _this2.rate },
-	                  'Rate'
+	                  'div',
+	                  null,
+	                  'Menu: ',
+	                  _this2.state.menu,
+	                  ' | Efficiency: ',
+	                  _this2.state.efficiency,
+	                  ' | Environment: ',
+	                  _this2.state.environment,
+	                  ' | Quality: ',
+	                  _this2.state.quality,
+	                  ' | Service: ',
+	                  _this2.state.service,
+	                  _react2.default.createElement(
+	                    _stardust.Button,
+	                    { onClick: _this2.rate },
+	                    'Rate'
+	                  )
 	                );
 	              }
 	            }()

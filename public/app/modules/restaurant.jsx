@@ -11,7 +11,13 @@ class Restaurant extends Component {
       location: props.location.vicinity,
       name: props.location.name,
       place_id: props.location.place_id,
-      rateMode: false
+      rateMode: false,
+
+      menu: props.menu || 0,
+      efficiency: props.efficiency || 0,
+      environment : props.environment || 0,
+      quality: props.quality || 0,
+      service: props.service || 0,
     };
 
     this.rate = this.rate.bind(this);
@@ -53,9 +59,12 @@ class Restaurant extends Component {
             {(() => {
               if(location) {
                 return (
-                  <Button onClick={this.rate}>
-                    Rate
-                  </Button>
+                  <div>
+                    Menu: {this.state.menu} | Efficiency: {this.state.efficiency} | Environment: {this.state.environment} | Quality: {this.state.quality} | Service: {this.state.service}
+                    <Button onClick={this.rate}>
+                      Rate
+                    </Button>
+                  </div>
               );
               }
             })()}
