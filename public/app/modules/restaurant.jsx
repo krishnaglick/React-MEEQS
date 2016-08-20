@@ -13,12 +13,13 @@ class Restaurant extends Component {
       place_id: props.location.place_id,
       rateMode: false,
 
-      menu: props.menu || 0,
-      efficiency: props.efficiency || 0,
-      environment : props.environment || 0,
-      quality: props.quality || 0,
-      service: props.service || 0,
+      menu: props.location.menu || 0,
+      efficiency: props.location.efficiency || 0,
+      environment : props.location.environment || 0,
+      quality: props.location.quality || 0,
+      service: props.location.service || 0,
     };
+    console.log(this.state);
 
     this.rate = this.rate.bind(this);
     this.cancel = this.cancel.bind(this);

@@ -49,8 +49,7 @@ class List extends Component {
         }
         return _.merge({}, location, meeqsRating);
       });
-      console.log(locations);
-      this.setState({ locations });
+      this.setState({ locations }, this.forceUpdate);
     }
     catch(x) {
       console.error('Error loading MEEQS ratings for locations!', x);
@@ -60,17 +59,18 @@ class List extends Component {
   render() {
     const { locations } = this.state;
 
+    const restaurants = _.map(locations, (location) => {
+      return (
+        <div className="field" key={location.id}>
+          <Restaurant hasLoc={this.props.hasLoc} location={location} />
+        </div>
+      );
+    });
+
     return (
       <div className="ui large form segment">
         <div className="ui two stackable cards">
-          {_.map(locations, (location) => {
-            return (
-              <div className="field" key={location.id}>
-                <Restaurant hasLoc={this.props.hasLoc} location={location} />
-              </div>
-            );
-          })
-          }
+          {restaurants}
         </div>
         <img src="./assets/images/google.png" />
       </div>

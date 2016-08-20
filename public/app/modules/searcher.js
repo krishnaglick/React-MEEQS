@@ -1,6 +1,8 @@
 
 /* globals google, document */
 
+import _ from 'lodash';
+
 class Searcher {
 
   constructor(location = {}) {
@@ -39,6 +41,11 @@ class Searcher {
           rej(results);
         }
         else {
+          results = _.map(results, (result) => {
+            _.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], (key) => {
+              result[key] = 0;
+            });
+          })
           res(results);
         }
       });

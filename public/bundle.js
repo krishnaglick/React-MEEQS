@@ -24000,10 +24000,9 @@
 	                            return _lodash2.default.merge({}, location, meeqsRating);
 	                          });
 	
-	                          console.log(locations);
-	                          _this2.setState({ locations: locations });
+	                          _this2.setState({ locations: locations }, _this2.forceUpdate);
 	
-	                        case 7:
+	                        case 6:
 	                        case 'end':
 	                          return _context2.stop();
 	                      }
@@ -24043,19 +24042,21 @@
 	      var locations = this.state.locations;
 	
 	
+	      var restaurants = _lodash2.default.map(locations, function (location) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'field', key: location.id },
+	          _react2.default.createElement(_restaurant2.default, { hasLoc: _this3.props.hasLoc, location: location })
+	        );
+	      });
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'ui large form segment' },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'ui two stackable cards' },
-	          _lodash2.default.map(locations, function (location) {
-	            return _react2.default.createElement(
-	              'div',
-	              { className: 'field', key: location.id },
-	              _react2.default.createElement(_restaurant2.default, { hasLoc: _this3.props.hasLoc, location: location })
-	            );
-	          })
+	          restaurants
 	        ),
 	        _react2.default.createElement('img', { src: './assets/images/google.png' })
 	      );
@@ -25619,12 +25620,13 @@
 	      place_id: props.location.place_id,
 	      rateMode: false,
 	
-	      menu: props.menu || 0,
-	      efficiency: props.efficiency || 0,
-	      environment: props.environment || 0,
-	      quality: props.quality || 0,
-	      service: props.service || 0
+	      menu: props.location.menu || 0,
+	      efficiency: props.location.efficiency || 0,
+	      environment: props.location.environment || 0,
+	      quality: props.location.quality || 0,
+	      service: props.location.service || 0
 	    };
+	    console.log(_this.state);
 	
 	    _this.rate = _this.rate.bind(_this);
 	    _this.cancel = _this.cancel.bind(_this);
@@ -78808,9 +78810,11 @@
 	
 	var _createClass3 = _interopRequireDefault(_createClass2);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _lodash = __webpack_require__(/*! lodash */ 688);
 	
-	/* globals google, document */
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Searcher = function () {
 	  function Searcher() {
@@ -78863,6 +78867,11 @@
 	          if (status !== google.maps.places.PlacesServiceStatus.OK) {
 	            rej(results);
 	          } else {
+	            results = _lodash2.default.map(results, function (result) {
+	              _lodash2.default.forEach(['menu', 'efficiency', 'environment', 'quality', 'service'], function (key) {
+	                result[key] = 0;
+	              });
+	            });
 	            res(results);
 	          }
 	        });
@@ -78871,6 +78880,7 @@
 	  }]);
 	  return Searcher;
 	}();
+	/* globals google, document */
 	
 	module.exports = Searcher;
 
